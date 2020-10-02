@@ -49,6 +49,7 @@ typings/
 
 #TypeORM
 output/
+.ormconfig.jsom
 
 # Optional npm cache directory
 .npm

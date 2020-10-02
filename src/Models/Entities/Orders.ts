@@ -19,8 +19,8 @@ export class Orders {
   @Column("int", { name: "userId" })
   userId: number;
 
-  @Column("int", { name: "productId", nullable: true })
-  productId: number | null;
+  @Column("int", { name: "productId" })
+  productId: number;
 
   @Column("int", { name: "quantity" })
   quantity: number;
