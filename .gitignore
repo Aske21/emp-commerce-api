@@ -48,8 +48,8 @@ typings/
 *.tsbuildinfo
 
 #TypeORM
-output/
-.ormconfig.jsom
+generatedModels/
+ormconfig.json
 
 # Optional npm cache directory
 .npm
