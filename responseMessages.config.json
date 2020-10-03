@@ -17,6 +17,15 @@
       "nonExistingUser": "Korisnik vezan za ovu narudžbu nije pronađen.",
       "nonExistingProduct": "Artikal vezan za ovu narudžbu nije pronađen.",
       "success": "Narudžba uspješno završena!"
+    },
+    "addCart": {
+      "nonExistingCart": "Korpa nije pronađena.",
+      "nonExistingCartItem": "Neki od artikala iz korpe nisu mogli biti naručeni.",
+      "success": "Svi artikli iz korpe su uspješno naručeni!"
+    },
+    "delete": {
+      "nonExistingOrder": "Nardužba koji želite ukloniti ne postoji.",
+      "success": "Nardužba uspješno uklonjena!"
     }
   }
 }

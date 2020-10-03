@@ -21,6 +21,18 @@ OrderController.get("/", async (req: Request, res: Response) => {
   }
 });
 
+OrderController.get("/archive", async (req: Request, res: Response) => {
+  try {
+    let archive: Order[] = await OrdersService.GetArchive();
+
+    if (archive.length === 0) res.status(204);
+
+    res.json(archive);
+  } catch (err) {
+    HandleAPIError(err, res);
+  }
+});
+
 OrderController.get("/:id", async (req: Request, res: Response) => {
   try {
     let order: Order = await OrdersService.GetOrder(Number(req.params.id));

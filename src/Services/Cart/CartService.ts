@@ -7,7 +7,7 @@ import { createQueryBuilder, getConnection } from "typeorm";
 import responseMessages from "../../../responseMessages.config.json";
 
 class CartService implements ICartService {
-  public GetCartContent = async (currentUserId: number): Promise<Cart[]> => {
+  public GetCart = async (currentUserId: number): Promise<Cart[]> => {
     return classToPlain(
       await createQueryBuilder(Cart)
         .where("Cart.userId = :id", {
