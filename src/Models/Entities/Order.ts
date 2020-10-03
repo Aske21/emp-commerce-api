@@ -2,10 +2,10 @@ import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } 
 import { Customer } from "./Customer";
 import { Product } from "./Product";
 
-@Index("cart_customer_id_fk", ["customerId"], {})
-@Index("cart_product_id_fk", ["productId"], {})
-@Entity("cart", { schema: "heroku_42df861642a2ede" })
-export class Cart {
+@Index("order_product_id_fk", ["productId"], {})
+@Index("order_customer_id_fk", ["customerId"], {})
+@Entity("order", { schema: "heroku_42df861642a2ede" })
+export class Order {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
   id: number;
 
@@ -15,11 +15,11 @@ export class Cart {
   @Column("int", { name: "productId" })
   productId: number;
 
-  @Column("int", { name: "quantity" })
+  @Column("int", { name: "quantity", default: () => "'1'" })
   quantity: number;
 
-  @Column("float", { name: "totalPrice", nullable: true, precision: 12 })
-  totalPrice: number | null;
+  @Column("float", { name: "totalPrice", precision: 12 })
+  totalPrice: number;
 
   @Column("datetime", { name: "createdAt", select: false })
   createdAt: Date;
@@ -27,21 +27,22 @@ export class Cart {
   @Column("timestamp", {
     name: "modifiedAt",
     default: () => "CURRENT_TIMESTAMP",
+    nullable: true,
     select: false,
   })
-  modifiedAt: Date;
+  modifiedAt: Date | null;
 
-  @Column("datetime", { name: "archivedAt", select: false })
-  archivedAt: Date;
+  @Column("datetime", { name: "archivedAt", nullable: true, select: false })
+  archivedAt: Date | null;
 
-  @ManyToOne(() => Customer, (customer) => customer.carts, {
+  @ManyToOne(() => Customer, (customer) => customer.orders, {
     onDelete: "RESTRICT",
     onUpdate: "RESTRICT",
   })
   @JoinColumn([{ name: "customerId", referencedColumnName: "id" }])
   customer: Customer;
 
-  @ManyToOne(() => Product, (product) => product.carts, {
+  @ManyToOne(() => Product, (product) => product.orders, {
     onDelete: "RESTRICT",
     onUpdate: "RESTRICT",
   })

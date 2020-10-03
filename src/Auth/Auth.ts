@@ -16,20 +16,16 @@ class Auth {
 
         jwt.verify(tokenBody, process.env.JWT_SECRET, (err, decodedToken) => {
           if (!err) {
-            req.user = decodedToken.user;
+            req.customer = decodedToken.customer;
             next();
           } else {
             console.log(`JWT Error 1: ${err}`);
-            return res
-              .status(401)
-              .send("Error: Access denied! Please provide a valid token.");
+            return res.status(401).send("Error: Access denied! Please provide a valid token.");
           }
         });
       } else {
         console.log(`JWT Error 2`);
-        return res
-          .status(401)
-          .send("Error: Access denied! Please provide a valid token.");
+        return res.status(401).send("Error: Access denied! Please provide a valid token.");
       }
     };
   }

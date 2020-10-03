@@ -1,9 +1,9 @@
-import { AuthorizedUserDTO } from "../../src/Common/Objects/UserDTO";
+import { AuthorizedUserDTO } from "../../src/Common/Objects/Entities/UserDTO";
 
 declare global {
   namespace Express {
     interface Request {
-      currentUser: AuthorizedUserDTO;
+      currentCustomer: AuthorizedUserDTO;
     }
   }
 }

@@ -1,9 +1,9 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Cart } from "./Cart";
-import { Orders } from "./Orders";
+import { Order } from "./Order";
 
-@Entity("user", { schema: "heroku_42df861642a2ede" })
-export class User {
+@Entity("customer", { schema: "heroku_42df861642a2ede" })
+export class Customer {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
   id: number;
 
@@ -31,21 +31,22 @@ export class User {
   @Column("varchar", { name: "refreshToken", nullable: true, length: 300 })
   refreshToken: string | null;
 
-  @Column("datetime", { name: "createdAt" })
+  @Column("datetime", { name: "createdAt", select: false })
   createdAt: Date;
 
   @Column("timestamp", {
     name: "modifiedAt",
     default: () => "CURRENT_TIMESTAMP",
+    select: false,
   })
   modifiedAt: Date;
 
-  @Column("varchar", { name: "archivedAt", nullable: true, length: 30 })
+  @Column("varchar", { name: "archivedAt", nullable: true, length: 30, select: false })
   archivedAt: string | null;
 
-  @OneToMany(() => Cart, (cart) => cart.user)
+  @OneToMany(() => Cart, (cart) => cart.customer)
   carts: Cart[];
 
-  @OneToMany(() => Orders, (orders) => orders.user)
-  orders: Orders[];
+  @OneToMany(() => Order, (order) => order.customer)
+  orders: Order[];
 }

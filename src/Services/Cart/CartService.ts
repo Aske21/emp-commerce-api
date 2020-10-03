@@ -1,59 +1,57 @@
-import { ICartService } from "../Contracts/ICartService";
-import { AddToCartDTO } from "./DTO/AddToCartDTO";
 import { classToPlain } from "class-transformer";
+import { AddToCartDTO } from "./DTO/AddToCartDTO";
+import { Cart, Product } from "../../Models/Entities";
+import { APIError } from "../../Common/Error/APIError";
+import { ICartService } from "../Contracts/ICartService";
 import { createQueryBuilder, getConnection } from "typeorm";
-import { Cart } from "./../../Models/Entities/Cart";
-import moment from "moment";
+import responseMessages from "../../../responseMessages.config.json";
 
 class CartService implements ICartService {
   public GetCartContent = async (currentUserId: number): Promise<Cart[]> => {
-    let response = await createQueryBuilder(Cart)
-      .where("Cart.userId = :id", {
-        id: currentUserId,
+    return classToPlain(
+      await createQueryBuilder(Cart)
+        .where("Cart.userId = :id", {
+          id: currentUserId,
+        })
+        .getMany()
+    ) as Cart[];
+  };
+
+  public AddToCart = async (dto: AddToCartDTO, currentUserId: number): Promise<string> => {
+    let product = await createQueryBuilder(Product)
+      .where("Product.id = :id", {
+        id: dto.productId,
       })
-      .getMany();
+      .getOne();
 
-    return response;
+    if (!product) throw APIError.EntityNotFound(responseMessages.cartError.add.nonExistingProduct);
+
+    dto.userId = currentUserId;
+    dto.createdAt = new Date();
+    dto.totalPrice = product.price * dto.quantity;
+
+    await getConnection().createQueryBuilder().insert().into(Cart).values(dto).execute();
+
+    return responseMessages.cartError.add.success;
   };
 
-  public AddToCart = async (dto: AddToCartDTO, currentUserId: number) => {
-    try {
-      dto.userId = currentUserId;
-      dto.createdAt = new Date();
+  public RemoveFromCart = async (cartId: number, currentUserId: number): Promise<string> => {
+    let cartItem: Cart = await createQueryBuilder(Cart)
+      .where("Cart.id = :cartId", { cartId: cartId })
+      .andWhere("Cart.userId = :userId", { userId: currentUserId })
+      .getOne();
 
-      await getConnection().createQueryBuilder().insert().into(Cart).values(dto).execute();
-      console.log("Restaurant successfully created");
-      return "Restaurant successfully created";
-    } catch (err) {
-      console.log(err);
-      return "An error occured";
-    }
-  };
+    if (!cartItem)
+      throw APIError.EntityNotFound(responseMessages.cartError.delete.nonExistingProduct);
 
-  public RemoveFromCart = async (cartId: number, currentUserId: number) => {
-    try {
-      let response = await createQueryBuilder("Cart")
-        .where("Cart.Id = :id", { id: cartId })
-        .andWhere("Cart.userId = :id", { id: currentUserId })
-        .andWhere("Cart.ArchivedAt IS NULL")
-        .getOne();
+    await getConnection()
+      .createQueryBuilder()
+      .delete()
+      .from(Cart)
+      .where("Cart.Id = :id", { id: cartId })
+      .execute();
 
-      if (!response) {
-        return "Error removing cart item";
-      }
-
-      await getConnection()
-        .createQueryBuilder()
-        .update(Cart)
-        .set({ archivedAt: moment().format("YYYY-MM-DD HH:mm:ss") })
-        .where("Cart.Id = :id", { id: cartId })
-        .execute();
-
-      return "Cart item successfully removed.";
-    } catch (err) {
-      console.log(err);
-      return "Error removing cart item";
-    }
+    return responseMessages.cartError.delete.success;
   };
 }
 

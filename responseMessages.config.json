@@ -1,0 +1,22 @@
+{
+  "cartError": {
+    "add": {
+      "nonExistingProduct": "Artikal koji pokušavate dodati ne postoji.",
+      "success": "Artikal uspješno dodan u korpu!"
+    },
+    "delete": {
+      "nonExistingProduct": "Artikal koji želite ukloniti ne postoji.",
+      "success": "Artikal uspješno uklonjen iz korpe!"
+    }
+  },
+  "orderError": {
+    "getOne": {
+      "nonExistingOrder": "Tražena narudžba nije pronađena."
+    },
+    "add": {
+      "nonExistingUser": "Korisnik vezan za ovu narudžbu nije pronađen.",
+      "nonExistingProduct": "Artikal vezan za ovu narudžbu nije pronađen.",
+      "success": "Narudžba uspješno završena!"
+    }
+  }
+}

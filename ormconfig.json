@@ -8,9 +8,9 @@
   "database": "heroku_42df861642a2ede",
   "synchronize": true,
   "logging": false,
-  "entities": ["src/Models/Entities/**/*.ts"],
-  "migrations": ["src/Models/Migrations/**/*.ts"],
-  "subscribers": ["src/Models/Subscribers/**/*.ts"],
+  "entities": ["src/Models/Entities/**/*.{ts,js}"],
+  "migrations": ["src/Models/Migrations/**/*.{ts,js}"],
+  "subscribers": ["src/Models/Subscribers/**/*.{ts,js}"],
   "cli": {
     "entitiesDir": "src/Models/Entities",
     "migrationsDir": "src/Models/Migrations",

@@ -4,9 +4,10 @@
   "description": "",
   "main": "src/Server.ts",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "ts-node src/API/index.ts",
     "build": "tsc",
-    "dev": "nodemon --exec ts-node src/index.ts"
+    "dev": "nodemon --exec ts-node src/API/index.ts",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
   },
   "author": "Almir Mulalic",
   "license": "ISC",
@@ -50,6 +51,7 @@
     "babel-preset-env": "^1.7.0",
     "nodemon": "^2.0.3",
     "ts-node": "3.3.0",
+    "tsconfig-paths": "^3.9.0",
     "typescript": "3.3.3333"
   }
 }

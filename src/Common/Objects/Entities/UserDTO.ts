@@ -1,4 +1,4 @@
-import { RoleType } from "./Types";
+import { RoleType } from "../Types";
 
 export class AuthorizedUserDTO {
   id: number;

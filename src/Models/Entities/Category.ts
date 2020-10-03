@@ -9,13 +9,18 @@ export class Category {
   @Column("varchar", { name: "categoryName", length: 50 })
   categoryName: string;
 
-  @Column("datetime", { name: "createdAt" })
+  @Column("datetime", { name: "createdAt", select: false })
   createdAt: Date;
 
-  @Column("timestamp", { name: "modifiedAt", nullable: true })
+  @Column("timestamp", {
+    name: "modifiedAt",
+    default: () => "CURRENT_TIMESTAMP",
+    nullable: true,
+    select: false,
+  })
   modifiedAt: Date | null;
 
-  @Column("date", { name: "archivedAt", nullable: true })
+  @Column("date", { name: "archivedAt", nullable: true, select: false })
   archivedAt: string | null;
 
   @OneToMany(() => Product, (product) => product.category)

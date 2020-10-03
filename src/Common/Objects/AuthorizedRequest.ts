@@ -1,4 +1,4 @@
-import { AuthorizedUserDTO } from "./UserDTO";
+import { AuthorizedUserDTO } from "./Entities/UserDTO";
 
 declare global {
   namespace Express {

@@ -4,8 +4,9 @@ import express from "express";
 import bodyParser from "body-parser";
 
 import { createConnection } from "typeorm";
-import UserController from "./Controllers/UserController";
+import UserController from "./Controllers/UsersController";
 import CartController from "./Controllers/CartController";
+import CategoryController from "./Controllers/CategoriesController";
 
 createConnection()
   .then(async (connection) => {
@@ -17,10 +18,10 @@ createConnection()
     app.use(bodyParser.json());
     app.use(cors());
     app.use(bodyParser.urlencoded({ extended: false }));
-    // app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-    app.use("/user", UserController);
+    app.use("/customer", UserController);
     app.use("/cart", CartController);
+    app.use("/category", CategoryController);
 
     app.listen(port, async () => {
       console.log("Successfully loaded Database table: " + connection.entityMetadatas[0].schema);

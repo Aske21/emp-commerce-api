@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Cart } from "./Cart";
-import { Orders } from "./Orders";
+import { Order } from "./Order";
 import { Category } from "./Category";
 
 @Index("categoryId", ["categoryId"], {})
@@ -41,23 +41,24 @@ export class Product {
   @Column("float", { name: "secondPrice", nullable: true, precision: 12 })
   secondPrice: number | null;
 
-  @Column("datetime", { name: "createdAt" })
+  @Column("datetime", { name: "createdAt", select: false })
   createdAt: Date;
 
   @Column("timestamp", {
     name: "modifiedAt",
     default: () => "CURRENT_TIMESTAMP",
+    select: false,
   })
   modifiedAt: Date;
 
-  @Column("varchar", { name: "archivedAt", nullable: true, length: 30 })
+  @Column("varchar", { name: "archivedAt", nullable: true, length: 30, select: false })
   archivedAt: string | null;
 
   @OneToMany(() => Cart, (cart) => cart.product)
   carts: Cart[];
 
-  @OneToMany(() => Orders, (orders) => orders.product)
-  orders: Orders[];
+  @OneToMany(() => Order, (order) => order.product)
+  orders: Order[];
 
   @ManyToOne(() => Category, (category) => category.products, {
     onDelete: "RESTRICT",
