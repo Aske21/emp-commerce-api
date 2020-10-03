@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 
 import { createConnection } from "typeorm";
 import UserController from "./Controllers/UserController";
+import CartController from "./Controllers/CartController";
 
 createConnection()
   .then(async (connection) => {
@@ -19,17 +20,14 @@ createConnection()
     // app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
     app.use("/user", UserController);
+    app.use("/cart", CartController);
 
     app.listen(port, async () => {
-      console.log(
-        "Successfully loaded Database table: " +
-          connection.entityMetadatas[0].schema
-      );
+      console.log("Successfully loaded Database table: " + connection.entityMetadatas[0].schema);
 
       if (connection.migrations.length > 0)
         console.log(
-          "Last migration: " +
-            connection.migrations[connection.migrations.length - 1].name
+          "Last migration: " + connection.migrations[connection.migrations.length - 1].name
         );
       console.log("Server is running on port: " + port);
     });

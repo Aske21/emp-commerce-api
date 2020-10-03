@@ -6,13 +6,13 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Product } from "./Product";
 import { User } from "./User";
+import { Product } from "./Product";
 
-@Index("productId", ["productId"], {})
 @Index("userId", ["userId"], {})
-@Entity("cart", { schema: "heroku_42df861642a2ede" })
-export class Cart {
+@Index("productId", ["productId"], {})
+@Entity("orders", { schema: "heroku_42df861642a2ede" })
+export class Orders {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
   id: number;
 
@@ -37,20 +37,20 @@ export class Cart {
   })
   modifiedAt: Date;
 
-  @Column("datetime", { name: "archivedAt", nullable: true })
-  archivedAt: Date | null;
+  @Column("varchar", { name: "archivedAt", nullable: true, length: 30 })
+  archivedAt: string | null;
 
-  @ManyToOne(() => Product, (product) => product.carts, {
-    onDelete: "RESTRICT",
-    onUpdate: "RESTRICT",
-  })
-  @JoinColumn([{ name: "productId", referencedColumnName: "id" }])
-  product: Product;
-
-  @ManyToOne(() => User, (user) => user.carts, {
+  @ManyToOne(() => User, (user) => user.orders, {
     onDelete: "RESTRICT",
     onUpdate: "RESTRICT",
   })
   @JoinColumn([{ name: "userId", referencedColumnName: "id" }])
   user: User;
+
+  @ManyToOne(() => Product, (product) => product.orders, {
+    onDelete: "RESTRICT",
+    onUpdate: "RESTRICT",
+  })
+  @JoinColumn([{ name: "productId", referencedColumnName: "id" }])
+  product: Product;
 }

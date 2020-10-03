@@ -11,6 +11,7 @@
   "author": "Almir Mulalic",
   "license": "ISC",
   "dependencies": {
+    "@ionic/app-scripts": "^3.2.3",
     "@sendgrid/mail": "^7.0.1",
     "@types/bluebird": "^3.5.30",
     "@types/cors": "^2.8.6",
