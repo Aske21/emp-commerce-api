@@ -11,11 +11,11 @@ OrderController.use(cors());
 
 OrderController.get("/", async (req: Request, res: Response) => {
   try {
-    let order: Order[] = await OrdersService.GetAllOrders();
+    let orders: Order[] = await OrdersService.GetAllOrders();
 
-    if (order.length === 0) res.status(204);
+    if (orders.length === 0) res.status(204);
 
-    res.json(order);
+    res.json(orders);
   } catch (err) {
     HandleAPIError(err, res);
   }
@@ -35,9 +35,7 @@ OrderController.get("/archive", async (req: Request, res: Response) => {
 
 OrderController.get("/:id", async (req: Request, res: Response) => {
   try {
-    let order: Order = await OrdersService.GetOrder(Number(req.params.id));
-
-    res.json(order);
+    res.json(await OrdersService.GetOrder(Number(req.params.id)));
   } catch (err) {
     HandleAPIError(err, res);
   }

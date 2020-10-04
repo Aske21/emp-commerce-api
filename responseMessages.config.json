@@ -1,5 +1,5 @@
 {
-  "cartError": {
+  "cart": {
     "add": {
       "nonExistingProduct": "Artikal koji pokušavate dodati ne postoji.",
       "success": "Artikal uspješno dodan u korpu!"
@@ -9,7 +9,7 @@
       "success": "Artikal uspješno uklonjen iz korpe!"
     }
   },
-  "orderError": {
+  "order": {
     "getOne": {
       "nonExistingOrder": "Tražena narudžba nije pronađena."
     },
@@ -24,8 +24,26 @@
       "success": "Svi artikli iz korpe su uspješno naručeni!"
     },
     "delete": {
-      "nonExistingOrder": "Nardužba koji želite ukloniti ne postoji.",
-      "success": "Nardužba uspješno uklonjena!"
+      "nonExistingOrder": "Nardužba koji želite arhivirati ne postoji.",
+      "success": "Nardužba uspješno arhivirana!"
+    }
+  },
+  "product": {
+    "getOne": {
+      "nonExistingProduct": "Traženi artikal nije pronađen."
+    },
+    "add": {
+      "nonExistingCategory": "Navedena kategorija nije pronađena.",
+      "success": "Artikal uspješno dodan!"
+    },
+    "update": {
+      "nonExistingProduct": "Navedeni artikal nije pronađen.",
+      "nonExistingCategory": "Navedena kategorija nije pronađena.",
+      "success": "Artikal uspješno izmjenjen!"
+    },
+    "delete": {
+      "nonExistingProduct": "Artikal koji želite arhivirati ne postoji.",
+      "success": "Artikal uspješno arhiviran!"
     }
   }
 }

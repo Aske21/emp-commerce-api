@@ -5,7 +5,8 @@ import { Cart, Product } from "../../Models/Entities";
 import { APIError } from "./../../Common/Error/APIError";
 import { Customer } from "./../../Models/Entities/Customer";
 import { createQueryBuilder, getConnection } from "typeorm";
-import { IOrderService } from "./../Contracts/IOrderService";
+import { IOrderService } from "../Contracts/IOrdersService";
+
 import responseMessages from "../../../responseMessages.config.json";
 
 class OrdersService implements IOrderService {
@@ -30,17 +31,18 @@ class OrdersService implements IOrderService {
   };
 
   public GetOrder = async (orderId: number): Promise<Order> => {
-    let order: Order = classToPlain(
+    let order = classToPlain(
       await createQueryBuilder(Order)
         .where("Order.id = :id", {
           id: orderId,
         })
         .innerJoinAndSelect("Order.customer", "Customer")
         .innerJoinAndSelect("Order.product", "Product")
-        .getMany()
+        .where("Order.archivedAt IS NULL")
+        .getOne()
     ) as Order;
 
-    if (!order) throw APIError.EntityNotFound(responseMessages.orderError.getOne.nonExistingOrder);
+    if (!order) throw APIError.EntityNotFound(responseMessages.order.getOne.nonExistingOrder);
 
     return order;
   };
@@ -52,8 +54,7 @@ class OrdersService implements IOrderService {
       })
       .getOne();
 
-    if (!customer)
-      throw APIError.EntityNotFound(responseMessages.orderError.add.nonExistingCustomer);
+    if (!customer) throw APIError.EntityNotFound(responseMessages.order.add.nonExistingCustomer);
 
     let product: Product = await createQueryBuilder(Product)
       .where("Product.id = :id", {
@@ -61,18 +62,16 @@ class OrdersService implements IOrderService {
       })
       .getOne();
 
-    if (!product) throw APIError.EntityNotFound(responseMessages.orderError.add.nonExistingProduct);
+    if (!product) throw APIError.EntityNotFound(responseMessages.order.add.nonExistingProduct);
 
     let order: Order = dto;
 
     order.totalPrice = product.price * dto.quantity;
     order.createdAt = new Date();
 
-    console.log(order);
-
     await getConnection().createQueryBuilder().insert().into(Order).values(order).execute();
 
-    return responseMessages.orderError.add.success;
+    return responseMessages.order.add.success;
   };
 
   public OrderCart = async (currentCustomerId: number): Promise<string> => {
@@ -98,7 +97,7 @@ class OrdersService implements IOrderService {
       .andWhere("Order.customerId = :customerId", { customerId: orderId })
       .getOne();
 
-    if (!order) throw APIError.EntityNotFound(responseMessages.orderError.delete.nonExistingOrder);
+    if (!order) throw APIError.EntityNotFound(responseMessages.order.delete.nonExistingOrder);
 
     await getConnection()
       .createQueryBuilder()
@@ -107,7 +106,7 @@ class OrdersService implements IOrderService {
       .where("Order.id = :id", { id: order.id })
       .execute();
 
-    return responseMessages.orderError.delete.success;
+    return responseMessages.order.delete.success;
   };
 }
 

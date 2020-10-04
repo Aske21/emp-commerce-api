@@ -9,6 +9,7 @@ import CartController from "./Controllers/CartController";
 import OrderController from "./Controllers/OrdersController";
 import CustomerController from "./Controllers/CustomerController";
 import CategoryController from "./Controllers/CategoriesController";
+import ProductController from "./Controllers/ProductsController";
 
 createConnection()
   .then(async (connection) => {
@@ -23,6 +24,7 @@ createConnection()
 
     app.use("/cart", CartController);
     app.use("/orders", OrderController);
+    app.use("/products", ProductController);
     app.use("/customer", CustomerController);
     app.use("/category", CategoryController);
 

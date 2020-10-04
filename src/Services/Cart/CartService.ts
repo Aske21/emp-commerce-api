@@ -25,7 +25,7 @@ class CartService implements ICartService {
       })
       .getOne();
 
-    if (!product) throw APIError.EntityNotFound(responseMessages.cartError.add.nonExistingProduct);
+    if (!product) throw APIError.EntityNotFound(responseMessages.cart.add.nonExistingProduct);
 
     dto.customerId = currentCustomerId;
     dto.createdAt = new Date();
@@ -33,7 +33,7 @@ class CartService implements ICartService {
 
     await getConnection().createQueryBuilder().insert().into(Cart).values(dto).execute();
 
-    return responseMessages.cartError.add.success;
+    return responseMessages.cart.add.success;
   };
 
   public RemoveFromCart = async (cartId: number, currentCustomerId: number): Promise<string> => {
@@ -42,8 +42,7 @@ class CartService implements ICartService {
       .andWhere("Cart.customerId = :customerId", { customerId: currentCustomerId })
       .getOne();
 
-    if (!cartItem)
-      throw APIError.EntityNotFound(responseMessages.cartError.delete.nonExistingProduct);
+    if (!cartItem) throw APIError.EntityNotFound(responseMessages.cart.delete.nonExistingProduct);
 
     await getConnection()
       .createQueryBuilder()
@@ -52,7 +51,7 @@ class CartService implements ICartService {
       .where("Cart.Id = :id", { id: cartId })
       .execute();
 
-    return responseMessages.cartError.delete.success;
+    return responseMessages.cart.delete.success;
   };
 }
 

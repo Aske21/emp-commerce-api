@@ -38,7 +38,7 @@ export class Product {
   @Column("float", { name: "price", precision: 12 })
   price: number;
 
-  @Column("float", { name: "secondPrice", nullable: true, precision: 12 })
+  @Column("float", { name: "secondPrice", nullable: true, default: null, precision: 12 })
   secondPrice: number | null;
 
   @Column("datetime", { name: "createdAt", select: false })
@@ -51,8 +51,8 @@ export class Product {
   })
   modifiedAt: Date;
 
-  @Column("varchar", { name: "archivedAt", nullable: true, length: 30, select: false })
-  archivedAt: string | null;
+  @Column("datetime", { name: "archivedAt", nullable: true, select: false })
+  archivedAt: Date;
 
   @OneToMany(() => Cart, (cart) => cart.product)
   carts: Cart[];
