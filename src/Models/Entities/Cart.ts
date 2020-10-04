@@ -21,10 +21,10 @@ export class Cart {
   @Column("float", { name: "totalPrice", nullable: true, precision: 12 })
   totalPrice: number | null;
 
-  @Column("datetime", { name: "createdAt", select: false })
+  @Column("timestamp", { name: "createdAt", default: () => "CURRENT_TIMESTAMP", select: false })
   createdAt: Date;
 
-  @Column("timestamp", {
+  @Column("datetime", {
     name: "modifiedAt",
     default: () => "CURRENT_TIMESTAMP",
     select: false,

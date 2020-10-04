@@ -5,6 +5,7 @@ import { APIError } from "../../Common/Error/APIError";
 import { ICartService } from "../Contracts/ICartService";
 import { createQueryBuilder, getConnection } from "typeorm";
 import responseMessages from "../../../responseMessages.config.json";
+import moment from "moment";
 
 class CartService implements ICartService {
   public GetCart = async (currentCustomerId: number): Promise<Cart[]> => {
@@ -28,7 +29,7 @@ class CartService implements ICartService {
     if (!product) throw APIError.EntityNotFound(responseMessages.cart.add.nonExistingProduct);
 
     dto.customerId = currentCustomerId;
-    dto.createdAt = new Date();
+
     dto.totalPrice = product.price * dto.quantity;
 
     await getConnection().createQueryBuilder().insert().into(Cart).values(dto).execute();

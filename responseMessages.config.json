@@ -16,7 +16,7 @@
     "add": {
       "nonExistingCustomer": "Korisnik vezan za ovu narudžbu nije pronađen.",
       "nonExistingProduct": "Artikal vezan za ovu narudžbu nije pronađen.",
-      "success": "Narudžba uspješno završena!"
+      "success": "Narudžba uspješno procesuirana!"
     },
     "addCart": {
       "nonExistingCart": "Korpa nije pronađena.",
@@ -25,6 +25,7 @@
     },
     "delete": {
       "nonExistingOrder": "Nardužba koji želite arhivirati ne postoji.",
+      "alreadyArchivedOrder": "Nardužba je već arhivirana.",
       "success": "Nardužba uspješno arhivirana!"
     }
   },

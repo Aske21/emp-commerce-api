@@ -6,6 +6,7 @@ import { ProductDTO } from "./DTO/ProductDTO";
 import { APIError } from "./../../Common/Error/APIError";
 
 import responseMessages from "../../../responseMessages.config.json";
+import moment from "moment";
 
 class OrdersService implements IPrdouctService {
   public GetAllProducts = async (): Promise<Product[]> => {
@@ -50,8 +51,6 @@ class OrdersService implements IPrdouctService {
     if (!category) throw APIError.EntityNotFound(responseMessages.product.add.nonExistingCategory);
 
     let product: Product = dto;
-
-    product.createdAt = new Date();
 
     await getConnection().createQueryBuilder().insert().into(Product).values(product).execute();
 
@@ -106,12 +105,12 @@ class OrdersService implements IPrdouctService {
     await getConnection()
       .createQueryBuilder()
       .update(Product)
-      .set({ archivedAt: new Date() })
+      .set({ archivedAt: "new Date(new Date.now())" })
       .where("Product.id = :id", { id: productId })
       .execute();
 
     return responseMessages.product.delete.success;
   };
 }
-NAPRAVI DATUM LOKALIZOVAN
+
 export default new OrdersService();

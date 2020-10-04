@@ -8,6 +8,7 @@ import { createQueryBuilder, getConnection } from "typeorm";
 import { IOrderService } from "../Contracts/IOrdersService";
 
 import responseMessages from "../../../responseMessages.config.json";
+import moment from "moment";
 
 class OrdersService implements IOrderService {
   public GetAllOrders = async (): Promise<Order[]> => {
@@ -67,7 +68,6 @@ class OrdersService implements IOrderService {
     let order: Order = dto;
 
     order.totalPrice = product.price * dto.quantity;
-    order.createdAt = new Date();
 
     await getConnection().createQueryBuilder().insert().into(Order).values(order).execute();
 
@@ -88,21 +88,23 @@ class OrdersService implements IOrderService {
       console.log(orderId);
     });
 
-    return "N0ice";
+    throw new Error("Method not implemented");
   };
 
   public RemoveOrder = async (orderId: number): Promise<string> => {
     let order: Order = await createQueryBuilder(Order)
       .where("Order.id = :id", { id: orderId })
-      .andWhere("Order.customerId = :customerId", { customerId: orderId })
+      .addSelect("Order.archivedAt")
       .getOne();
 
     if (!order) throw APIError.EntityNotFound(responseMessages.order.delete.nonExistingOrder);
+    else if (order.archivedAt !== null)
+      throw APIError.EntityNotFound(responseMessages.order.delete.alreadyArchivedOrder);
 
     await getConnection()
       .createQueryBuilder()
       .update(Order)
-      .set({ archivedAt: new Date() })
+      .set({ archivedAt: moment().subtract("2", "hours").toDate() })
       .where("Order.id = :id", { id: order.id })
       .execute();
 
