@@ -1,6 +1,6 @@
 import { RoleType } from "../Types";
 
-export class AuthorizedUserDTO {
+export class AuthorizedCustomerDTO {
   id: number;
   firstName: string;
   lastName: string;

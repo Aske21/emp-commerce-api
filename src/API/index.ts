@@ -4,8 +4,10 @@ import express from "express";
 import bodyParser from "body-parser";
 
 import { createConnection } from "typeorm";
-import UserController from "./Controllers/UsersController";
+
 import CartController from "./Controllers/CartController";
+import OrderController from "./Controllers/OrdersController";
+import CustomerController from "./Controllers/CustomerController";
 import CategoryController from "./Controllers/CategoriesController";
 
 createConnection()
@@ -19,8 +21,9 @@ createConnection()
     app.use(cors());
     app.use(bodyParser.urlencoded({ extended: false }));
 
-    app.use("/customer", UserController);
     app.use("/cart", CartController);
+    app.use("/orders", OrderController);
+    app.use("/customer", CustomerController);
     app.use("/category", CategoryController);
 
     app.listen(port, async () => {

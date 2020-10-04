@@ -7,17 +7,18 @@ import { createQueryBuilder, getConnection } from "typeorm";
 import responseMessages from "../../../responseMessages.config.json";
 
 class CartService implements ICartService {
-  public GetCart = async (currentUserId: number): Promise<Cart[]> => {
+  public GetCart = async (currentCustomerId: number): Promise<Cart[]> => {
     return classToPlain(
       await createQueryBuilder(Cart)
-        .where("Cart.userId = :id", {
-          id: currentUserId,
+        .innerJoinAndSelect("Cart.product", "Product")
+        .where("Cart.customerId = :id", {
+          id: currentCustomerId,
         })
         .getMany()
     ) as Cart[];
   };
 
-  public AddToCart = async (dto: AddToCartDTO, currentUserId: number): Promise<string> => {
+  public AddToCart = async (dto: AddToCartDTO, currentCustomerId: number): Promise<string> => {
     let product = await createQueryBuilder(Product)
       .where("Product.id = :id", {
         id: dto.productId,
@@ -26,7 +27,7 @@ class CartService implements ICartService {
 
     if (!product) throw APIError.EntityNotFound(responseMessages.cartError.add.nonExistingProduct);
 
-    dto.userId = currentUserId;
+    dto.customerId = currentCustomerId;
     dto.createdAt = new Date();
     dto.totalPrice = product.price * dto.quantity;
 
@@ -35,10 +36,10 @@ class CartService implements ICartService {
     return responseMessages.cartError.add.success;
   };
 
-  public RemoveFromCart = async (cartId: number, currentUserId: number): Promise<string> => {
+  public RemoveFromCart = async (cartId: number, currentCustomerId: number): Promise<string> => {
     let cartItem: Cart = await createQueryBuilder(Cart)
       .where("Cart.id = :cartId", { cartId: cartId })
-      .andWhere("Cart.userId = :userId", { userId: currentUserId })
+      .andWhere("Cart.customerId = :customerId", { customerId: currentCustomerId })
       .getOne();
 
     if (!cartItem)

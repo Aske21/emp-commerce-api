@@ -4,14 +4,14 @@ import { classToPlain } from "class-transformer";
 import { createQueryBuilder } from "typeorm";
 import { Customer } from "../../Models/Entities";
 
-const UserController = express.Router();
+const CustomerController = express.Router();
 
-UserController.use(cors());
+CustomerController.use(cors());
 
-UserController.get("/login", async (req, res) => {
+CustomerController.get("/login", async (req, res) => {
   let usersDataResponse = classToPlain(await createQueryBuilder(Customer).getMany()) as any;
 
   res.json(usersDataResponse);
 });
 
-export default UserController;
+export default CustomerController;

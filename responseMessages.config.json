@@ -14,7 +14,7 @@
       "nonExistingOrder": "Tražena narudžba nije pronađena."
     },
     "add": {
-      "nonExistingUser": "Korisnik vezan za ovu narudžbu nije pronađen.",
+      "nonExistingCustomer": "Korisnik vezan za ovu narudžbu nije pronađen.",
       "nonExistingProduct": "Artikal vezan za ovu narudžbu nije pronađen.",
       "success": "Narudžba uspješno završena!"
     },

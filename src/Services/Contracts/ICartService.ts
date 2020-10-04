@@ -2,7 +2,7 @@ import { Cart } from "../../Models/Entities";
 import { AddToCartDTO } from "../Cart/DTO/AddToCartDTO";
 
 export interface ICartService {
-  GetCart(userId: number): Promise<Cart[]>;
-  AddToCart(dto: AddToCartDTO, userId: number): Promise<string>;
-  RemoveFromCart(cartId: number, userId: number): Promise<string>;
+  GetCart(currentCustomerId: number): Promise<Cart[]>;
+  AddToCart(dto: AddToCartDTO, currentCustomerId: number): Promise<string>;
+  RemoveFromCart(cartId: number, currentCustomerId: number): Promise<string>;
 }

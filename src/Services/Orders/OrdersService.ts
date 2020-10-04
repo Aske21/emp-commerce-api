@@ -11,13 +11,21 @@ import responseMessages from "../../../responseMessages.config.json";
 class OrdersService implements IOrderService {
   public GetAllOrders = async (): Promise<Order[]> => {
     return classToPlain(
-      await createQueryBuilder(Order).where("archivedAt IS NULL").getMany()
+      await createQueryBuilder(Order)
+        .innerJoinAndSelect("Order.customer", "Customer")
+        .innerJoinAndSelect("Order.product", "Product")
+        .where("Order.archivedAt IS NULL")
+        .getMany()
     ) as Order[];
   };
 
   public GetArchive = async (): Promise<Order[]> => {
     return classToPlain(
-      await createQueryBuilder(Order).where("archivedAt IS NOT NULL").getMany()
+      await createQueryBuilder(Order)
+        .innerJoinAndSelect("Order.customer", "Customer")
+        .innerJoinAndSelect("Order.product", "Product")
+        .where("Order.archivedAt IS NOT NULL")
+        .getMany()
     ) as Order[];
   };
 
@@ -27,6 +35,8 @@ class OrdersService implements IOrderService {
         .where("Order.id = :id", {
           id: orderId,
         })
+        .innerJoinAndSelect("Order.customer", "Customer")
+        .innerJoinAndSelect("Order.product", "Product")
         .getMany()
     ) as Order;
 
@@ -42,7 +52,8 @@ class OrdersService implements IOrderService {
       })
       .getOne();
 
-    if (!customer) throw APIError.EntityNotFound(responseMessages.orderError.add.nonExistingUser);
+    if (!customer)
+      throw APIError.EntityNotFound(responseMessages.orderError.add.nonExistingCustomer);
 
     let product: Product = await createQueryBuilder(Product)
       .where("Product.id = :id", {
@@ -54,10 +65,12 @@ class OrdersService implements IOrderService {
 
     let order: Order = dto;
 
-    order.createdAt = new Date();
     order.totalPrice = product.price * dto.quantity;
+    order.createdAt = new Date();
 
-    await getConnection().createQueryBuilder().insert().into(Cart).values(dto).execute();
+    console.log(order);
+
+    await getConnection().createQueryBuilder().insert().into(Order).values(order).execute();
 
     return responseMessages.orderError.add.success;
   };
@@ -65,10 +78,10 @@ class OrdersService implements IOrderService {
   public OrderCart = async (currentCustomerId: number): Promise<string> => {
     let orders = classToPlain(
       (await createQueryBuilder(Cart)
-        .where("Cart.userId = :id", {
+        .where("Cart.customerId = :id", {
           id: currentCustomerId,
         })
-        .select("Cart.userId", "userId")
+        .select("Cart.customerId", "customerId")
         .getMany()) as Cart[]
     );
 
@@ -82,7 +95,7 @@ class OrdersService implements IOrderService {
   public RemoveOrder = async (orderId: number): Promise<string> => {
     let order: Order = await createQueryBuilder(Order)
       .where("Order.id = :id", { id: orderId })
-      .andWhere("Cart.userId = :userId", { userId: orderId })
+      .andWhere("Order.customerId = :customerId", { customerId: orderId })
       .getOne();
 
     if (!order) throw APIError.EntityNotFound(responseMessages.orderError.delete.nonExistingOrder);

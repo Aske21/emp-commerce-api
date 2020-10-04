@@ -1,6 +1,6 @@
 export class CartItemDTO {
   id: number;
-  userId: number;
+  customerId: number;
   productId: number;
   quantity: number;
   totalPrice: number;

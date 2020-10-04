@@ -55,8 +55,12 @@ OrderController.put("/addCart", (req: Request, res: Response) => {
   //   OrderService.AddCart(req:Request, res:Response);
 });
 
-OrderController.put("/remove/:id", (req: Request, res: Response) => {
-  //   OrderService.RemoveOrder(req:Request, res:Response);
+OrderController.delete("/:id", async (req: Request, res: Response) => {
+  try {
+    res.json(await OrdersService.RemoveOrder(Number(req.params.id)));
+  } catch (err) {
+    HandleAPIError(err, res);
+  }
 });
 
 export default OrderController;

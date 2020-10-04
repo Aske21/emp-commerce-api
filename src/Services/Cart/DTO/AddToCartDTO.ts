@@ -1,6 +1,8 @@
-export class AddToCartDTO {
+import { Cart } from "./../../../Models/Entities/Cart";
+
+export class AddToCartDTO extends Cart {
   productId: number;
-  userId: number;
+  customerId: number;
   quantity: number;
   totalPrice?: number;
   createdAt?: Date;
