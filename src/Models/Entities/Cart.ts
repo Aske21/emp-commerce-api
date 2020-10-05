@@ -24,15 +24,16 @@ export class Cart {
   @Column("timestamp", { name: "createdAt", default: () => "CURRENT_TIMESTAMP", select: false })
   createdAt: Date;
 
-  @Column("datetime", {
+  @Column("timestamp", {
     name: "modifiedAt",
     default: () => "CURRENT_TIMESTAMP",
+    onUpdate: "CURRENT_TIMESTAMP",
     select: false,
   })
   modifiedAt: Date;
 
   @Column("datetime", { name: "archivedAt", select: false })
-  archivedAt: Date;
+  archivedAt: Date | null;
 
   @ManyToOne(() => Customer, (customer) => customer.carts, {
     onDelete: "RESTRICT",

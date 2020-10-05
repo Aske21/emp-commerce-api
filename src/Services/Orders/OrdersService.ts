@@ -1,14 +1,13 @@
+import moment from "moment";
+import { PlaceOrderDTO } from "./DTO";
+import { IOrderService } from "../Contracts";
 import { classToPlain } from "class-transformer";
 import { Order } from "../../Models/Entities/Order";
-import { PlaceOrderDTO } from "./DTO/PlaceOrderDTO";
 import { Cart, Product } from "../../Models/Entities";
 import { APIError } from "./../../Common/Error/APIError";
 import { Customer } from "./../../Models/Entities/Customer";
 import { createQueryBuilder, getConnection } from "typeorm";
-import { IOrderService } from "../Contracts/IOrdersService";
-
 import responseMessages from "../../../responseMessages.config.json";
-import moment from "moment";
 
 class OrdersService implements IOrderService {
   public GetAllOrders = async (): Promise<Order[]> => {
@@ -32,20 +31,18 @@ class OrdersService implements IOrderService {
   };
 
   public GetOrder = async (orderId: number): Promise<Order> => {
-    let order = classToPlain(
-      await createQueryBuilder(Order)
-        .where("Order.id = :id", {
-          id: orderId,
-        })
-        .innerJoinAndSelect("Order.customer", "Customer")
-        .innerJoinAndSelect("Order.product", "Product")
-        .where("Order.archivedAt IS NULL")
-        .getOne()
-    ) as Order;
+    let order = await createQueryBuilder(Order)
+      .where("Order.id = :id", {
+        id: orderId,
+      })
+      .innerJoinAndSelect("Order.customer", "Customer")
+      .innerJoinAndSelect("Order.product", "Product")
+      .where("Order.archivedAt IS NULL")
+      .getOne();
 
     if (!order) throw APIError.EntityNotFound(responseMessages.order.getOne.nonExistingOrder);
 
-    return order;
+    return classToPlain(order) as Order;
   };
 
   public PlaceOrder = async (dto: PlaceOrderDTO): Promise<string> => {

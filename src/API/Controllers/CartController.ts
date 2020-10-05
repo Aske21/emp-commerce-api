@@ -4,7 +4,7 @@ import { Cart } from "../../Models/Entities";
 import CartService from "../../Services/Cart/CartService";
 import express, { Request, Response, Router } from "express";
 import { HandleAPIError } from "../../Common/Error/HandleAPIError";
-import { AddToCartDTO } from "../../Services/Cart/DTO/AddToCartDTO";
+import { AddToCartDTO } from "../../Services/Cart/DTO";
 
 const CartController: Router = express.Router();
 
@@ -24,6 +24,7 @@ CartController.get("/", Auth.Authorize(), async (req: Request, res: Response) =>
 
 CartController.post("/", Auth.Authorize(), async (req: Request, res: Response) => {
   try {
+    res.status(201);
     res.json(await CartService.AddToCart(req.body as AddToCartDTO, req.currentCustomer.id));
   } catch (err) {
     HandleAPIError(err, res);

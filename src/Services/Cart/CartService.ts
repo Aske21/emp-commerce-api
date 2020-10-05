@@ -1,11 +1,10 @@
 import { classToPlain } from "class-transformer";
-import { AddToCartDTO } from "./DTO/AddToCartDTO";
+import { AddToCartDTO } from "./DTO";
 import { Cart, Product } from "../../Models/Entities";
 import { APIError } from "../../Common/Error/APIError";
-import { ICartService } from "../Contracts/ICartService";
 import { createQueryBuilder, getConnection } from "typeorm";
 import responseMessages from "../../../responseMessages.config.json";
-import moment from "moment";
+import { ICartService } from "../Contracts";
 
 class CartService implements ICartService {
   public GetCart = async (currentCustomerId: number): Promise<Cart[]> => {

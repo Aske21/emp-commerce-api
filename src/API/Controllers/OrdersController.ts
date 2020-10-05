@@ -1,9 +1,10 @@
 import cors from "cors";
 import express, { Router, Request, Response } from "express";
-import Auth from "../../Auth/Auth";
+
 import { HandleAPIError } from "../../Common/Error/HandleAPIError";
 import { Order } from "../../Models/Entities/Order";
 import OrdersService from "../../Services/Orders/OrdersService";
+import { PlaceOrderDTO } from "./../../Services/Orders/DTO";
 
 const OrderController: Router = express.Router();
 
@@ -43,7 +44,8 @@ OrderController.get("/:id", async (req: Request, res: Response) => {
 
 OrderController.post("/", async (req: Request, res: Response) => {
   try {
-    res.json(await OrdersService.PlaceOrder(req.body));
+    res.status(201);
+    res.json(await OrdersService.PlaceOrder(req.body as PlaceOrderDTO));
   } catch (err) {
     HandleAPIError(err, res);
   }

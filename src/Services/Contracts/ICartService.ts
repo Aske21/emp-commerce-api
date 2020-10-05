@@ -1,5 +1,5 @@
 import { Cart } from "../../Models/Entities";
-import { AddToCartDTO } from "../Cart/DTO/AddToCartDTO";
+import { AddToCartDTO } from "../Cart/DTO";
 
 export interface ICartService {
   GetCart(currentCustomerId: number): Promise<Cart[]>;

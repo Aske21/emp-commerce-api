@@ -6,7 +6,6 @@ export const HandleAPIError = (err: APIError | Error, res: Response) => {
     res.status(err.code);
     res.json(err.message);
   } else {
-    console.log(err);
     res.status(500);
     res.json(err.message);
   }

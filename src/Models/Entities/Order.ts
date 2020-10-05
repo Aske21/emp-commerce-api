@@ -21,16 +21,16 @@ export class Order {
   @Column("float", { name: "totalPrice", precision: 12 })
   totalPrice: number;
 
-  @Column("datetime", { name: "createdAt", select: false })
+  @Column("timestamp", { name: "createdAt", default: () => "CURRENT_TIMESTAMP", select: false })
   createdAt: Date;
 
   @Column("timestamp", {
     name: "modifiedAt",
     default: () => "CURRENT_TIMESTAMP",
-    nullable: true,
+    onUpdate: "CURRENT_TIMESTAMP",
     select: false,
   })
-  modifiedAt: Date | null;
+  modifiedAt: Date;
 
   @Column("datetime", { name: "archivedAt", nullable: true, select: false })
   archivedAt: Date | null;

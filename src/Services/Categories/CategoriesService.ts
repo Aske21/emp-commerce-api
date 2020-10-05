@@ -1,9 +1,8 @@
 import { classToPlain } from "class-transformer";
 import { createQueryBuilder } from "typeorm";
 
-import { Cart, Category } from "../../Models/Entities";
-
-import { ICategoryService } from "../Contracts/ICategoryService";
+import { Category } from "../../Models/Entities";
+import { ICategoryService } from "../Contracts";
 
 class CategoryService implements ICategoryService {
   public GetCategories = async () => {

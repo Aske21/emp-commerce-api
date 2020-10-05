@@ -44,7 +44,24 @@
     },
     "delete": {
       "nonExistingProduct": "Artikal koji želite arhivirati ne postoji.",
+      "alreadyArchivedProduct": "Artikal je već arhiviran.",
       "success": "Artikal uspješno arhiviran!"
+    }
+  },
+  "customer": {
+    "register": {
+      "customerAlreadyExist": "Email adresa je već u upotrebi!",
+      "success": "Uspješno ste se registrovali na Empero Home Webshop."
+    },
+    "login": {
+      "customerNotFound": "Korisnik nije pronađen!",
+      "wrongPassword": "Pogrešna lozinka!",
+      "success": "Usješno ste se prijavili. Dobrodošli!"
+    },
+    "refresh": {
+      "nonExistingRefreshToken": "Vaš token nije dostupan. Molimo da se pokušate relogovati!",
+      "tokenMalformed": "Vaš token je malformisan. Molimo da se pokušate relogovati!",
+      "success": "Usješno ste se prijavili. Dobrodošli!"
     }
   }
 }

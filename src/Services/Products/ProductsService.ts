@@ -1,12 +1,11 @@
-import { classToPlain } from "class-transformer";
-import { createQueryBuilder, getConnection } from "typeorm";
-import { Category, Product } from "../../Models/Entities";
-import { IPrdouctService } from "../Contracts/IProductsService";
-import { ProductDTO } from "./DTO/ProductDTO";
-import { APIError } from "./../../Common/Error/APIError";
-
-import responseMessages from "../../../responseMessages.config.json";
 import moment from "moment";
+import { ProductDTO } from "./DTO";
+import { IPrdouctService } from "../Contracts";
+import { classToPlain } from "class-transformer";
+import { APIError } from "./../../Common/Error/APIError";
+import { Category, Product } from "../../Models/Entities";
+import { createQueryBuilder, getConnection, getRepository } from "typeorm";
+import responseMessages from "../../../responseMessages.config.json";
 
 class OrdersService implements IPrdouctService {
   public GetAllProducts = async (): Promise<Product[]> => {
@@ -23,6 +22,16 @@ class OrdersService implements IPrdouctService {
       await createQueryBuilder(Product)
         .innerJoinAndSelect("Product.category", "Category")
         .where("Product.archivedAt IS NOT NULL")
+        .getMany()
+    ) as Product[];
+  };
+
+  public GetRecommended = async (): Promise<Product[]> => {
+    return classToPlain(
+      await createQueryBuilder(Product)
+        .innerJoinAndSelect("Product.category", "Category")
+        .where("Product.isRecommended = true")
+        .andWhere("Product.archivedAt IS NULL")
         .getMany()
     ) as Product[];
   };
@@ -85,12 +94,7 @@ class OrdersService implements IPrdouctService {
     updatedProduct.createdAt = product.createdAt;
     updatedProduct.archivedAt = product.archivedAt;
 
-    await getConnection()
-      .createQueryBuilder()
-      .update(Product)
-      .set(updatedProduct)
-      .where("Product.id = :id", { id: productId })
-      .execute();
+    await getRepository(Product).save(updatedProduct);
 
     return responseMessages.product.update.success;
   };
@@ -98,14 +102,17 @@ class OrdersService implements IPrdouctService {
   public DeleteProduct = async (productId: number): Promise<string> => {
     let product: Product = await createQueryBuilder(Product)
       .where("Product.id = :id", { id: productId })
+      .addSelect("Product.archivedAt")
       .getOne();
 
     if (!product) throw APIError.EntityNotFound(responseMessages.product.delete.nonExistingProduct);
+    else if (product.archivedAt !== null)
+      throw APIError.EntityNotFound(responseMessages.product.delete.alreadyArchivedProduct);
 
     await getConnection()
       .createQueryBuilder()
       .update(Product)
-      .set({ archivedAt: "new Date(new Date.now())" })
+      .set({ archivedAt: moment().subtract("2", "hours").toDate() })
       .where("Product.id = :id", { id: productId })
       .execute();
 

@@ -41,18 +41,22 @@ export class Product {
   @Column("float", { name: "secondPrice", nullable: true, default: null, precision: 12 })
   secondPrice: number | null;
 
-  @Column("datetime", { name: "createdAt", select: false })
+  @Column("boolean", { name: "isRecommended", default: false })
+  isRecommended: number;
+
+  @Column("timestamp", { name: "createdAt", default: () => "CURRENT_TIMESTAMP", select: false })
   createdAt: Date;
 
   @Column("timestamp", {
     name: "modifiedAt",
     default: () => "CURRENT_TIMESTAMP",
+    onUpdate: "CURRENT_TIMESTAMP",
     select: false,
   })
   modifiedAt: Date;
 
   @Column("datetime", { name: "archivedAt", nullable: true, select: false })
-  archivedAt: Date;
+  archivedAt: Date | null;
 
   @OneToMany(() => Cart, (cart) => cart.product)
   carts: Cart[];

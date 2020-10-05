@@ -1,15 +1,15 @@
 import cors from "cors";
 import express, { Router, Request, Response } from "express";
 import { HandleAPIError } from "../../Common/Error/HandleAPIError";
-import { Order, Product } from "../../Models/Entities";
-import OrdersService from "../../Services/Orders/OrdersService";
+import { Product } from "../../Models/Entities";
 import ProductsService from "../../Services/Products/ProductsService";
+import { ProductDTO } from "./../../Services/Products/DTO";
 
 const ProductController: Router = express.Router();
 
 ProductController.use(cors());
 
-ProductController.get("/", async (req, res) => {
+ProductController.get("/", async (req: Request, res: Response) => {
   try {
     let products: Product[] = await ProductsService.GetAllProducts();
 
@@ -21,7 +21,7 @@ ProductController.get("/", async (req, res) => {
   }
 });
 
-ProductController.get("/archive", async (req, res) => {
+ProductController.get("/archive", async (req: Request, res: Response) => {
   try {
     let archive: Product[] = await ProductsService.GetArchive();
 
@@ -33,7 +33,19 @@ ProductController.get("/archive", async (req, res) => {
   }
 });
 
-ProductController.get("/:id", async (req, res) => {
+ProductController.get("/recommended", async (req: Request, res: Response) => {
+  try {
+    let recommended: Product[] = await ProductsService.GetRecommended();
+
+    if (recommended.length === 0) res.status(204);
+
+    res.json(recommended);
+  } catch (err) {
+    HandleAPIError(err, res);
+  }
+});
+
+ProductController.get("/:id", async (req: Request, res: Response) => {
   try {
     res.json(await ProductsService.GetProduct(Number(req.params.id)));
   } catch (err) {
@@ -41,15 +53,16 @@ ProductController.get("/:id", async (req, res) => {
   }
 });
 
-ProductController.post("/", async (req, res) => {
+ProductController.post("/", async (req: Request, res: Response) => {
   try {
-    res.json(await ProductsService.AddPrdouct(req.body));
+    res.status(201);
+    res.json(await ProductsService.AddPrdouct(req.body as ProductDTO));
   } catch (err) {
     HandleAPIError(err, res);
   }
 });
 
-ProductController.put("/:id", async (req, res) => {
+ProductController.put("/:id", async (req: Request, res: Response) => {
   try {
     res.json(await ProductsService.UpdateProduct(Number(req.params.id), req.body));
   } catch (err) {
@@ -57,7 +70,7 @@ ProductController.put("/:id", async (req, res) => {
   }
 });
 
-ProductController.delete("/:id", async (req, res) => {
+ProductController.delete("/:id", async (req: Request, res: Response) => {
   try {
     res.json(await ProductsService.DeleteProduct(Number(req.params.id)));
   } catch (err) {

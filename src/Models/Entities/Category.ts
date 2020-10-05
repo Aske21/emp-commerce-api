@@ -9,16 +9,16 @@ export class Category {
   @Column("varchar", { name: "categoryName", length: 50 })
   categoryName: string;
 
-  @Column("datetime", { name: "createdAt", select: false })
+  @Column("timestamp", { name: "createdAt", default: () => "CURRENT_TIMESTAMP", select: false })
   createdAt: Date;
 
   @Column("timestamp", {
     name: "modifiedAt",
     default: () => "CURRENT_TIMESTAMP",
-    nullable: true,
+    onUpdate: "CURRENT_TIMESTAMP",
     select: false,
   })
-  modifiedAt: Date | null;
+  modifiedAt: Date;
 
   @Column("date", { name: "archivedAt", nullable: true, select: false })
   archivedAt: string | null;

@@ -31,12 +31,13 @@ export class Customer {
   @Column("varchar", { name: "refreshToken", nullable: true, length: 300 })
   refreshToken: string | null;
 
-  @Column("datetime", { name: "createdAt", select: false })
+  @Column("timestamp", { name: "createdAt", default: () => "CURRENT_TIMESTAMP", select: false })
   createdAt: Date;
 
   @Column("timestamp", {
     name: "modifiedAt",
     default: () => "CURRENT_TIMESTAMP",
+    onUpdate: "CURRENT_TIMESTAMP",
     select: false,
   })
   modifiedAt: Date;

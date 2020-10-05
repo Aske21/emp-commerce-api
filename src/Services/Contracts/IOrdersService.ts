@@ -1,5 +1,5 @@
 import { Order } from "../../Models/Entities/Order";
-import { PlaceOrderDTO } from "../Orders/DTO/PlaceOrderDTO";
+import { PlaceOrderDTO } from "../Orders/DTO";
 
 export interface IOrderService {
   GetAllOrders(): Promise<Order[]>;
