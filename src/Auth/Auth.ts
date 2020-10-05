@@ -1,31 +1,39 @@
 import jwt from "jsonwebtoken";
+import { APIError } from "../Common/Error/APIError";
+import { Request, Response, NextFunction } from "express";
+import responseMessages from "../../responseMessages.config.json";
+import { HandleAPIError } from "../Common/Error/HandleAPIError";
 
 require("dotenv").config();
 
 class Auth {
-  public Authorize(credentials = []) {
-    return (req, res, next) => {
+  public Authorize(credentials = [] as string[]) {
+    return (req: Request, res: Response, next: NextFunction) => {
       const token = req.headers["x-token"];
 
-      if (typeof credentials === "string") {
-        credentials = [credentials];
-      }
+      if (typeof credentials === "string") credentials = [credentials];
 
       if (token) {
         const tokenBody = token.slice(7);
 
         jwt.verify(tokenBody, process.env.JWT_ACCESS_SECRET, (err, decodedToken) => {
-          if (!err) {
-            req.currentCustomer = decodedToken.currentCustomer;
-            next();
-          } else {
-            console.log(`JWT Error 1: ${err}`);
-            return res.status(401).send("Error: Access denied! Please provide a valid token.");
+          if (err) {
+            HandleAPIError(
+              APIError.AuthorizationError(responseMessages.authorization.invalidToken),
+              res
+            );
+            return;
           }
+
+          req.currentCustomer = decodedToken.currentCustomer;
+          next();
         });
       } else {
-        console.log(`JWT Error 2`);
-        return res.status(401).send("Error: Access denied! Please provide a valid token.");
+        HandleAPIError(
+          APIError.AuthorizationError(responseMessages.authorization.invalidToken),
+          res
+        );
+        return;
       }
     };
   }

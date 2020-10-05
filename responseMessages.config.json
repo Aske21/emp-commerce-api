@@ -63,5 +63,9 @@
       "tokenMalformed": "Vaš token je malformisan. Molimo da se pokušate relogovati!",
       "success": "Usješno ste se prijavili. Dobrodošli!"
     }
+  },
+  "authorization": {
+    "invalidToken": "Vaš token nije validan. Molimo da se pokušate relogovati!",
+    "tokenMalformet": "Vaš token je malformisan. Molimo da se pokušate relogovati!"
   }
 }
