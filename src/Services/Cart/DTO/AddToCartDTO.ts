@@ -4,6 +4,6 @@ export class AddToCartDTO extends Cart {
   productId: number;
   customerId: number;
   quantity: number;
-  totalPrice?: number;
-  createdAt?: Date;
+  totalPrice: number;
+  createdAt: Date;
 }
