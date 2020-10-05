@@ -32,12 +32,12 @@ class OrdersService implements IOrderService {
 
   public GetOrder = async (orderId: number): Promise<Order> => {
     let order = await createQueryBuilder(Order)
+      .innerJoinAndSelect("Order.customer", "Customer")
+      .innerJoinAndSelect("Order.product", "Product")
       .where("Order.id = :id", {
         id: orderId,
       })
-      .innerJoinAndSelect("Order.customer", "Customer")
-      .innerJoinAndSelect("Order.product", "Product")
-      .where("Order.archivedAt IS NULL")
+      .andWhere("Order.archivedAt IS NULL")
       .getOne();
 
     if (!order) throw APIError.EntityNotFound(responseMessages.order.getOne.nonExistingOrder);
@@ -45,11 +45,12 @@ class OrdersService implements IOrderService {
     return classToPlain(order) as Order;
   };
 
-  public PlaceOrder = async (dto: PlaceOrderDTO): Promise<string> => {
+  public PlaceOrder = async (dto: PlaceOrderDTO, currentCustomerId: number): Promise<string> => {
     let customer: Customer = await createQueryBuilder(Customer)
       .where("Customer.id = :id", {
-        id: dto.customerId,
+        id: currentCustomerId,
       })
+      .andWhere("Customer.archivedAt IS NULL")
       .getOne();
 
     if (!customer) throw APIError.EntityNotFound(responseMessages.order.add.nonExistingCustomer);
@@ -64,6 +65,7 @@ class OrdersService implements IOrderService {
 
     let order: Order = dto;
 
+    order.customerId = currentCustomerId;
     order.totalPrice = product.price * dto.quantity;
 
     await getConnection().createQueryBuilder().insert().into(Order).values(order).execute();
@@ -91,6 +93,7 @@ class OrdersService implements IOrderService {
   public RemoveOrder = async (orderId: number): Promise<string> => {
     let order: Order = await createQueryBuilder(Order)
       .where("Order.id = :id", { id: orderId })
+      .andWhere("Order.archivedAt IS NULL")
       .addSelect("Order.archivedAt")
       .getOne();
 

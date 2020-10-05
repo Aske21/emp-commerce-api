@@ -5,7 +5,7 @@ export interface IOrderService {
   GetAllOrders(): Promise<Order[]>;
   GetArchive(): Promise<Order[]>;
   GetOrder(orderId: number): Promise<Order>;
-  PlaceOrder(dto: PlaceOrderDTO): Promise<string>;
+  PlaceOrder(dto: PlaceOrderDTO, customerId: number): Promise<string>;
   OrderCart(currentCustomerId: number): Promise<string>;
   RemoveOrder(orderId: number): Promise<string>;
 }

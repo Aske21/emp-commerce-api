@@ -44,11 +44,11 @@ class CustomerService implements ICustomerService {
 
     let tokenUser: TokenUserDTO = new TokenUserDTO(customer);
 
-    let accessToken = jwt.sign({ user: tokenUser }, process.env.JWT_ACCESS_SECRET, {
+    let accessToken = jwt.sign({ currentCustomer: tokenUser }, process.env.JWT_ACCESS_SECRET, {
       expiresIn: "1h",
     });
 
-    let refreshToken = jwt.sign({ user: tokenUser }, process.env.JWT_REFRESH_SECRET);
+    let refreshToken = jwt.sign({ currentCustomer: tokenUser }, process.env.JWT_REFRESH_SECRET);
 
     customer.refreshToken = refreshToken;
 
@@ -75,7 +75,10 @@ class CustomerService implements ICustomerService {
       throw APIError.AuthorizationError(responseMessages.customer.refresh.tokenMalformed);
 
     return {
-      accessToken: jwt.sign({ user: new TokenUserDTO(customer) }, process.env.JWT_ACCESS_SECRET),
+      accessToken: jwt.sign(
+        { currentCustomer: new TokenUserDTO(customer) },
+        process.env.JWT_ACCESS_SECRET
+      ),
     };
   };
 

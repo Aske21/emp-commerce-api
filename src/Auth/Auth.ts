@@ -14,9 +14,9 @@ class Auth {
       if (token) {
         const tokenBody = token.slice(7);
 
-        jwt.verify(tokenBody, process.env.JWT_SECRET, (err, decodedToken) => {
+        jwt.verify(tokenBody, process.env.JWT_ACCESS_SECRET, (err, decodedToken) => {
           if (!err) {
-            req.customer = decodedToken.customer;
+            req.currentCustomer = decodedToken.currentCustomer;
             next();
           } else {
             console.log(`JWT Error 1: ${err}`);

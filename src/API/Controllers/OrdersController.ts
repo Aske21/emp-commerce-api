@@ -1,5 +1,6 @@
 import cors from "cors";
 import express, { Router, Request, Response } from "express";
+import Auth from "../../Auth/Auth";
 
 import { HandleAPIError } from "../../Common/Error/HandleAPIError";
 import { Order } from "../../Models/Entities/Order";
@@ -10,7 +11,7 @@ const OrderController: Router = express.Router();
 
 OrderController.use(cors());
 
-OrderController.get("/", async (req: Request, res: Response) => {
+OrderController.get("/", Auth.Authorize(), async (req: Request, res: Response) => {
   try {
     let orders: Order[] = await OrdersService.GetAllOrders();
 
@@ -22,7 +23,7 @@ OrderController.get("/", async (req: Request, res: Response) => {
   }
 });
 
-OrderController.get("/archive", async (req: Request, res: Response) => {
+OrderController.get("/archive", Auth.Authorize(), async (req: Request, res: Response) => {
   try {
     let archive: Order[] = await OrdersService.GetArchive();
 
@@ -34,7 +35,7 @@ OrderController.get("/archive", async (req: Request, res: Response) => {
   }
 });
 
-OrderController.get("/:id", async (req: Request, res: Response) => {
+OrderController.get("/:id", Auth.Authorize(), async (req: Request, res: Response) => {
   try {
     res.json(await OrdersService.GetOrder(Number(req.params.id)));
   } catch (err) {
@@ -42,20 +43,22 @@ OrderController.get("/:id", async (req: Request, res: Response) => {
   }
 });
 
-OrderController.post("/", async (req: Request, res: Response) => {
+OrderController.post("/", Auth.Authorize(), async (req: Request, res: Response) => {
   try {
     res.status(201);
-    res.json(await OrdersService.PlaceOrder(req.body as PlaceOrderDTO));
+    res.json(
+      await OrdersService.PlaceOrder(req.body as PlaceOrderDTO, Number(req.currentCustomer.id))
+    );
   } catch (err) {
     HandleAPIError(err, res);
   }
 });
 
-OrderController.put("/addCart", (req: Request, res: Response) => {
+OrderController.put("/addCart", Auth.Authorize(), (req: Request, res: Response) => {
   //   OrderService.AddCart(req:Request, res:Response);
 });
 
-OrderController.delete("/:id", async (req: Request, res: Response) => {
+OrderController.delete("/:id", Auth.Authorize(), async (req: Request, res: Response) => {
   try {
     res.json(await OrdersService.RemoveOrder(Number(req.params.id)));
   } catch (err) {
