@@ -6,7 +6,7 @@ export interface IPrdouctService {
   GetArchive(): Promise<Product[]>;
   GetRecommended(): Promise<Product[]>;
   GetProduct(productId: number): Promise<Product>;
-  AddPrdouct(dto: ProductDTO): Promise<string>;
-  UpdateProduct(productId: number, dto: ProductDTO): Promise<string>;
+  AddPrdouct(dto: ProductDTO, productImage: string): Promise<string>;
+  UpdateProduct(productId: number, dto: ProductDTO, productImage: string): Promise<string>;
   DeleteProduct(productId: number): Promise<string>;
 }

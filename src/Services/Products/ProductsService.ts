@@ -6,6 +6,7 @@ import { APIError } from "./../../Common/Error/APIError";
 import { Category, Product } from "../../Models/Entities";
 import { createQueryBuilder, getConnection, getRepository } from "typeorm";
 import responseMessages from "../../../responseMessages.config.json";
+import { ImageService } from "./../../Imager/ImageService";
 
 class OrdersService implements IPrdouctService {
   public GetAllProducts = async (): Promise<Product[]> => {
@@ -50,7 +51,7 @@ class OrdersService implements IPrdouctService {
     return product;
   };
 
-  public AddPrdouct = async (dto: ProductDTO): Promise<string> => {
+  public AddPrdouct = async (dto: ProductDTO, productImage: string): Promise<string> => {
     let category: Category = await createQueryBuilder(Category)
       .where("Category.id = :id", {
         id: dto.categoryId,
@@ -59,6 +60,8 @@ class OrdersService implements IPrdouctService {
 
     if (!category) throw APIError.EntityNotFound(responseMessages.product.add.nonExistingCategory);
 
+    dto.image = productImage;
+
     let product: Product = dto;
 
     await getConnection().createQueryBuilder().insert().into(Product).values(product).execute();
@@ -66,7 +69,11 @@ class OrdersService implements IPrdouctService {
     return responseMessages.product.add.success;
   };
 
-  public UpdateProduct = async (productId: number, dto: ProductDTO): Promise<string> => {
+  public UpdateProduct = async (
+    productId: number,
+    dto: ProductDTO,
+    productImage: string
+  ): Promise<string> => {
     let product: Product = await createQueryBuilder(Product)
       .where("Product.id = :id", {
         id: productId,
@@ -91,6 +98,7 @@ class OrdersService implements IPrdouctService {
     let updatedProduct: Product = dto;
 
     updatedProduct.id = product.id;
+    updatedProduct.image = productImage;
     updatedProduct.createdAt = product.createdAt;
     updatedProduct.archivedAt = product.archivedAt;
 
