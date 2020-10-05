@@ -8,19 +8,23 @@ export class APIError extends Error {
     this.message = message;
   }
 
-  public static EntityNotFound(message: string) {
-    return new APIError(404, message);
-  }
-
-  public static EntityAlreadyExist(message: string) {
-    return new APIError(409, message);
-  }
-
-  public static WrongCredentials(message: string) {
+  public static WrongCredentials = (message: string) => {
     return new APIError(400, message);
-  }
+  };
 
-  public static AuthorizationError(message: string) {
+  public static AuthorizationError = (message: string) => {
     return new APIError(401, message);
-  }
+  };
+
+  public static PermissionError = (message: string) => {
+    return new APIError(403, message);
+  };
+
+  public static EntityNotFound = (message: string) => {
+    return new APIError(404, message);
+  };
+
+  public static EntityAlreadyExist = (message: string) => {
+    return new APIError(409, message);
+  };
 }

@@ -37,6 +37,18 @@ class OrdersService implements IPrdouctService {
     ) as Product[];
   };
 
+  public GetSuggested = async (categoryId: number): Promise<Product[]> => {
+    return classToPlain(
+      await createQueryBuilder(Product)
+        .innerJoinAndSelect("Product.category", "Category")
+        .where("Product.categoryId = :categoryId", { categoryId: categoryId })
+        .andWhere("Product.archivedAt IS NULL")
+        .orderBy("RAND()")
+        .take(4)
+        .getMany()
+    ) as Product[];
+  };
+
   public GetProduct = async (productId: number): Promise<Product> => {
     let product = classToPlain(
       await createQueryBuilder(Product)

@@ -1,5 +1,6 @@
 import cors from "cors";
 import express, { Router, Request, Response } from "express";
+import Auth from "../../Auth/Auth";
 import { HandleAPIError } from "../../Common/Error/HandleAPIError";
 import CustomerService from "../../Services/Customer/CustomerService";
 import { RefreshTokenDTO, RegisterDTO } from "./../../Services/Customer/DTO";
@@ -25,7 +26,7 @@ CustomerController.post("/login", async (req: Request, res: Response) => {
   }
 });
 
-CustomerController.post("/refreshToken", async (req: Request, res: Response) => {
+CustomerController.post("/refreshToken", Auth.Authorize(), async (req: Request, res: Response) => {
   try {
     res.json(await CustomerService.RefreshToken(req.body as RefreshTokenDTO));
   } catch (err) {

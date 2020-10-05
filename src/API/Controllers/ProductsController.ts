@@ -47,6 +47,18 @@ ProductController.get("/recommended", async (req: Request, res: Response) => {
   }
 });
 
+ProductController.get("/suggested/:categoryId", async (req: Request, res: Response) => {
+  try {
+    let suggested: Product[] = await ProductsService.GetSuggested(Number(req.params.categoryId));
+
+    if (suggested.length === 0) res.status(204);
+
+    res.json(suggested);
+  } catch (err) {
+    HandleAPIError(err, res);
+  }
+});
+
 ProductController.get("/:id", async (req: Request, res: Response) => {
   try {
     res.json(await ProductsService.GetProduct(Number(req.params.id)));

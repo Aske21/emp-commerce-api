@@ -7,7 +7,7 @@ import { HandleAPIError } from "../Common/Error/HandleAPIError";
 require("dotenv").config();
 
 class Auth {
-  public Authorize(credentials = [] as string[]) {
+  public Authorize = (credentials = [] as string[]) => {
     return (req: Request, res: Response, next: NextFunction) => {
       const token = req.headers["x-token"];
 
@@ -36,7 +36,15 @@ class Auth {
         return;
       }
     };
-  }
+  };
+
+  public UsePermissions = () => {
+    return (req: Request, res: Response, next: NextFunction) => {
+      if (req.currentCustomer.role === 1) next();
+      else
+        HandleAPIError(APIError.PermissionError(responseMessages.authorization.noPermission), res);
+    };
+  };
 }
 
 export default new Auth();
