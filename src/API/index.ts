@@ -10,6 +10,7 @@ import OrderController from "./Controllers/OrdersController";
 import CustomerController from "./Controllers/CustomerController";
 import CategoryController from "./Controllers/CategoriesController";
 import ProductController from "./Controllers/ProductsController";
+import ImageController from "../Imager/ImageController";
 
 createConnection()
   .then(async (connection) => {
@@ -23,10 +24,13 @@ createConnection()
     app.use(bodyParser.urlencoded({ extended: false }));
 
     app.use("/cart", CartController);
+    app.use("/imager", ImageController);
     app.use("/orders", OrderController);
     app.use("/products", ProductController);
     app.use("/customer", CustomerController);
     app.use("/category", CategoryController);
+
+    app.use("/uploads", express.static("uploads"));
 
     app.listen(port, async () => {
       console.log("Successfully loaded Database table: " + connection.entityMetadatas[0].schema);
