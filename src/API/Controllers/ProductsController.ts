@@ -5,7 +5,7 @@ import { HandleAPIError } from "../../Common/Error/HandleAPIError";
 import { ImageService } from "../../Imager/ImageService";
 import { Product } from "../../Models/Entities";
 import ProductsService from "../../Services/Products/ProductsService";
-import { ProductDTO } from "./../../Services/Products/DTO";
+import { ProductDTO, ProductFilterDTO } from "./../../Services/Products/DTO";
 
 const ProductController: Router = express.Router();
 
@@ -13,7 +13,7 @@ ProductController.use(cors());
 
 ProductController.get("/", async (req: Request, res: Response) => {
   try {
-    let products: Product[] = await ProductsService.GetAllProducts();
+    let products: Product[] = await ProductsService.GetAllProducts(req.body as ProductFilterDTO);
 
     if (products.length === 0) res.status(204);
 

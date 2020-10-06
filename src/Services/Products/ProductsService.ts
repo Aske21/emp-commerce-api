@@ -1,21 +1,26 @@
 import moment from "moment";
-import { ProductDTO } from "./DTO";
+import { ProductDTO, ProductFilterDTO } from "./DTO";
 import { IPrdouctService } from "../Contracts";
 import { classToPlain } from "class-transformer";
 import { APIError } from "./../../Common/Error/APIError";
 import { Category, Product } from "../../Models/Entities";
 import { createQueryBuilder, getConnection, getRepository } from "typeorm";
 import responseMessages from "../../../responseMessages.config.json";
-import { ImageService } from "./../../Imager/ImageService";
+import { Console } from "console";
 
 class OrdersService implements IPrdouctService {
-  public GetAllProducts = async (): Promise<Product[]> => {
-    return classToPlain(
+  public GetAllProducts = async (dto: ProductFilterDTO): Promise<Product[]> => {
+    let products = classToPlain(
       await createQueryBuilder(Product)
         .innerJoinAndSelect("Product.category", "Category")
         .where("Product.archivedAt IS NULL")
+        .orderBy(`Product.${dto.sidx ?? "createdAt"}`, dto.sord ?? "ASC")
         .getMany()
     ) as Product[];
+
+    if (products.length === 0) return products;
+
+    return OrdersService.FilterProducts(products, dto);
   };
 
   public GetArchive = async (): Promise<Product[]> => {
@@ -137,6 +142,27 @@ class OrdersService implements IPrdouctService {
       .execute();
 
     return responseMessages.product.delete.success;
+  };
+
+  private static FilterProducts = (products: Product[], dto: ProductFilterDTO) => {
+    let filteredProducts: Product[] = products;
+
+    if (dto.productNameQuery != "")
+      filteredProducts = filteredProducts.filter((product) =>
+        product.heading.toLowerCase().includes(dto.productNameQuery.toLowerCase())
+      );
+
+    if (dto.categoryId !== null)
+      filteredProducts = filteredProducts.filter(
+        (product) => product.category.id === dto.categoryId
+      );
+
+    if (dto.price.length === 2)
+      filteredProducts = filteredProducts.filter(
+        (product) => product.price >= dto.price[0] && product.price <= dto.price[1]
+      );
+
+    return filteredProducts;
   };
 }
 

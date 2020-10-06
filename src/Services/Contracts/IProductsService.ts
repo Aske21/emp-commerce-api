@@ -1,8 +1,8 @@
 import { Product } from "../../Models/Entities";
-import { ProductDTO } from "../Products/DTO";
+import { ProductDTO, ProductFilterDTO } from "../Products/DTO";
 
 export interface IPrdouctService {
-  GetAllProducts(): Promise<Product[]>;
+  GetAllProducts(dto: ProductFilterDTO): Promise<Product[]>;
   GetArchive(): Promise<Product[]>;
   GetRecommended(): Promise<Product[]>;
   GetSuggested(categoryId: number): Promise<Product[]>;
