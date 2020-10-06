@@ -11,7 +11,7 @@ const ProductController: Router = express.Router();
 
 ProductController.use(cors());
 
-ProductController.get("/", async (req: Request, res: Response) => {
+ProductController.post("/getAll", async (req: Request, res: Response) => {
   try {
     let products: Product[] = await ProductsService.GetAllProducts(req.body as ProductFilterDTO);
 
