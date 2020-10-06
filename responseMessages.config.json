@@ -11,7 +11,8 @@
   },
   "order": {
     "getOne": {
-      "nonExistingOrder": "Tražena narudžba nije pronađena."
+      "nonExistingOrder": "Tražena narudžba nije pronađena.",
+      "alreadyArchivedOrder": "Nardužba je arhivirana."
     },
     "add": {
       "nonExistingCustomer": "Korisnik vezan za ovu narudžbu nije pronađen.",

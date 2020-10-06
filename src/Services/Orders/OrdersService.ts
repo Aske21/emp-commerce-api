@@ -1,5 +1,5 @@
 import moment from "moment";
-import { PlaceOrderDTO } from "./DTO";
+import { GetOrderDTO, PlaceOrderDTO } from "./DTO";
 import { IOrderService } from "../Contracts";
 import { classToPlain } from "class-transformer";
 import { Order } from "../../Models/Entities/Order";
@@ -30,17 +30,18 @@ class OrdersService implements IOrderService {
     ) as Order[];
   };
 
-  public GetOrder = async (orderId: number): Promise<Order> => {
+  public GetOrder = async (dto: GetOrderDTO, orderId: number): Promise<Order> => {
     let order = await createQueryBuilder(Order)
       .innerJoinAndSelect("Order.customer", "Customer")
       .innerJoinAndSelect("Order.product", "Product")
       .where("Order.id = :id", {
         id: orderId,
       })
-      .andWhere("Order.archivedAt IS NULL")
       .getOne();
 
     if (!order) throw APIError.EntityNotFound(responseMessages.order.getOne.nonExistingOrder);
+    else if (!dto.includeArchived && order.archivedAt !== null)
+      throw APIError.EntityNotFound(responseMessages.order.getOne.alreadyArchivedOrder);
 
     return classToPlain(order) as Order;
   };
@@ -93,7 +94,6 @@ class OrdersService implements IOrderService {
   public RemoveOrder = async (orderId: number): Promise<string> => {
     let order: Order = await createQueryBuilder(Order)
       .where("Order.id = :id", { id: orderId })
-      .andWhere("Order.archivedAt IS NULL")
       .addSelect("Order.archivedAt")
       .getOne();
 

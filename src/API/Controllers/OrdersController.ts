@@ -6,6 +6,7 @@ import { HandleAPIError } from "../../Common/Error/HandleAPIError";
 import { Order } from "../../Models/Entities/Order";
 import OrdersService from "../../Services/Orders/OrdersService";
 import { PlaceOrderDTO } from "./../../Services/Orders/DTO";
+import { GetOrderDTO } from "../../Services/Orders/DTO/GetOrderDTO";
 
 const OrderController: Router = express.Router();
 
@@ -45,13 +46,13 @@ OrderController.get(
   }
 );
 
-OrderController.get(
+OrderController.post(
   "/:id",
   Auth.Authorize(),
   Auth.UsePermissions(),
   async (req: Request, res: Response) => {
     try {
-      res.json(await OrdersService.GetOrder(Number(req.params.id)));
+      res.json(await OrdersService.GetOrder(req.body as GetOrderDTO, Number(req.params.id)));
     } catch (err) {
       HandleAPIError(err, res);
     }

@@ -28,7 +28,7 @@ createConnection()
     app.use("/orders", OrderController);
     app.use("/products", ProductController);
     app.use("/customer", CustomerController);
-    app.use("/category", CategoryController);
+    app.use("/categories", CategoryController);
 
     app.use("/images", express.static("src/Imager/images"));
 
