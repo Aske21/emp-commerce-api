@@ -1,12 +1,14 @@
 import cors from "cors";
 import Auth from "../../Auth/Auth";
 import { Cart } from "../../Models/Entities";
-import CartService from "../../Services/Cart/CartService";
+import CartServiceProvider from "../../Services/Cart/CartServiceProvider";
 import express, { Request, Response, Router } from "express";
 import { HandleAPIError } from "../../Common/Error/HandleAPIError";
 import { AddToCartDTO } from "../../Services/Cart/DTO";
 
 const CartController: Router = express.Router();
+
+const CartService = new CartServiceProvider() as CartServiceProvider;
 
 CartController.use(cors());
 

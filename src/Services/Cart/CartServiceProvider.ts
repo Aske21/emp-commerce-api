@@ -6,7 +6,7 @@ import { createQueryBuilder, getConnection } from "typeorm";
 import responseMessages from "../../../responseMessages.config.json";
 import { ICartService } from "../Contracts";
 
-class CartService implements ICartService {
+class CartServiceProvider implements ICartService {
   public GetCart = async (currentCustomerId: number): Promise<Cart[]> => {
     return classToPlain(
       await createQueryBuilder(Cart)
@@ -55,4 +55,4 @@ class CartService implements ICartService {
   };
 }
 
-export default new CartService();
+export default CartServiceProvider;

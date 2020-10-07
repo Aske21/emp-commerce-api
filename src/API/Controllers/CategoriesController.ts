@@ -2,9 +2,11 @@ import cors from "cors";
 import express, { Request, Response, Router } from "express";
 import { HandleAPIError } from "../../Common/Error/HandleAPIError";
 import { Category } from "../../Models/Entities";
-import CategoryService from "../../Services/Categories/CategoriesService";
+import CategoriesServiceProvider from "../../Services/Categories/CategoriesServiceProvider";
 
 const CategoryController: Router = express.Router();
+
+const CategoryService = new CategoriesServiceProvider() as CategoriesServiceProvider;
 
 CategoryController.use(cors());
 

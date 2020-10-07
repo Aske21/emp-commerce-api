@@ -4,10 +4,12 @@ import Auth from "../../Auth/Auth";
 
 import { HandleAPIError } from "../../Common/Error/HandleAPIError";
 import { Order } from "../../Models/Entities/Order";
-import OrdersService from "../../Services/Orders/OrdersService";
+import OrdersServiceProvider from "../../Services/Orders/OrdersServiceProvider";
 import { PlaceOrderDTO } from "./../../Services/Orders/DTO";
 
 const OrderController: Router = express.Router();
+
+const OrdersService = new OrdersServiceProvider() as OrdersServiceProvider;
 
 OrderController.use(cors());
 

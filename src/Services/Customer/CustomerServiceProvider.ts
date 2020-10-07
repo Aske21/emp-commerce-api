@@ -14,7 +14,7 @@ import { APIError } from "../../Common/Error/APIError";
 import { createQueryBuilder, getRepository } from "typeorm";
 import responseMessages from "../../../responseMessages.config.json";
 
-class CustomerService implements ICustomerService {
+class CustomerServiceProvider implements ICustomerService {
   public Register = async (dto: RegisterDTO): Promise<string> => {
     if (
       (await createQueryBuilder(Customer)
@@ -87,4 +87,4 @@ class CustomerService implements ICustomerService {
   }
 }
 
-export default new CustomerService();
+export default CustomerServiceProvider;
