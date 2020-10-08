@@ -1,20 +1,21 @@
-import { classToPlain } from "class-transformer";
 import cors from "cors";
+import { Product } from "../../Models/Entities";
+import { classToPlain } from "class-transformer";
+import { ImageService } from "../../Imager/ImageService";
 import express, { Router, Request, Response } from "express";
 import { HandleAPIError } from "../../Common/Error/HandleAPIError";
-import { ImageService } from "../../Imager/ImageService";
-import { Product } from "../../Models/Entities";
-import ProductsService from "../../Services/Products/ProductsService";
 import { ProductDTO, ProductFilterDTO } from "./../../Services/Products/DTO";
+import ProductsServiceProvider from "../../Services/Products/ProductsService";
 
 const ProductController: Router = express.Router();
 
+const ProductsService = new ProductsServiceProvider() as ProductsServiceProvider;
+
 ProductController.use(cors());
 
-ProductController.get("/", async (req: Request, res: Response) => {
+ProductController.post("/getAll", async (req: Request, res: Response) => {
   try {
     let products: Product[] = await ProductsService.GetAllProducts(req.body as ProductFilterDTO);
-
     if (products.length === 0) res.status(204);
 
     res.json(products);

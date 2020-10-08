@@ -2,10 +2,12 @@ import cors from "cors";
 import express, { Router, Request, Response } from "express";
 import Auth from "../../Auth/Auth";
 import { HandleAPIError } from "../../Common/Error/HandleAPIError";
-import CustomerService from "../../Services/Customer/CustomerService";
+import CustomerServiceProvider from "../../Services/Customer/CustomerServiceProvider";
 import { RefreshTokenDTO, RegisterDTO } from "./../../Services/Customer/DTO";
 
 const CustomerController: Router = express.Router();
+
+const CustomerService = new CustomerServiceProvider() as CustomerServiceProvider;
 
 CustomerController.use(cors());
 

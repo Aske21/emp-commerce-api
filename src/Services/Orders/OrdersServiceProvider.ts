@@ -4,12 +4,12 @@ import { IOrderService } from "../Contracts";
 import { classToPlain } from "class-transformer";
 import { Order } from "../../Models/Entities/Order";
 import { Cart, Product } from "../../Models/Entities";
-import { APIError } from "./../../Common/Error/APIError";
-import { Customer } from "./../../Models/Entities/Customer";
+import { APIError } from "../../Common/Error/APIError";
+import { Customer } from "../../Models/Entities/Customer";
 import { createQueryBuilder, getConnection } from "typeorm";
 import responseMessages from "../../../responseMessages.config.json";
 
-class OrdersService implements IOrderService {
+class OrdersServiceProvider implements IOrderService {
   public GetAllOrders = async (): Promise<Order[]> => {
     return classToPlain(
       await createQueryBuilder(Order)
@@ -112,4 +112,4 @@ class OrdersService implements IOrderService {
   };
 }
 
-export default new OrdersService();
+export default OrdersServiceProvider;

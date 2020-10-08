@@ -6,9 +6,8 @@ import { APIError } from "./../../Common/Error/APIError";
 import { Category, Product } from "../../Models/Entities";
 import { createQueryBuilder, getConnection, getRepository } from "typeorm";
 import responseMessages from "../../../responseMessages.config.json";
-import { Console } from "console";
 
-class OrdersService implements IPrdouctService {
+class ProductServiceProvider implements IPrdouctService {
   public GetAllProducts = async (dto: ProductFilterDTO): Promise<Product[]> => {
     let products = classToPlain(
       await createQueryBuilder(Product)
@@ -20,7 +19,7 @@ class OrdersService implements IPrdouctService {
 
     if (products.length === 0) return products;
 
-    return OrdersService.FilterProducts(products, dto);
+    return ProductServiceProvider.FilterProducts(products, dto);
   };
 
   public GetArchive = async (): Promise<Product[]> => {
@@ -166,4 +165,4 @@ class OrdersService implements IPrdouctService {
   };
 }
 
-export default new OrdersService();
+export default ProductServiceProvider;
