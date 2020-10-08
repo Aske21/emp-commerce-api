@@ -17,7 +17,6 @@ ProductController.post("/getAll", async (req: Request, res: Response) => {
   try {
     let products: Product[] = await ProductsService.GetAllProducts(req.body as ProductFilterDTO);
     if (products.length === 0) res.status(204);
-
     res.json(products);
   } catch (err) {
     HandleAPIError(err, res);
@@ -74,6 +73,7 @@ ProductController.post(
   async (req: Request, res: Response) => {
     try {
       res.status(201);
+
       res.json(
         await ProductsService.AddPrdouct(classToPlain(req.body) as ProductDTO, req.file.filename)
       );
