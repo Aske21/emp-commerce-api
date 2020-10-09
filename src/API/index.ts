@@ -30,7 +30,7 @@ createConnection()
     app.use("/customer", CustomerController);
     app.use("/categories", CategoryController);
 
-    app.use("/images", express.static("src/Imager/images"));
+    app.use("/images", express.static("src/Images"));
 
     app.listen(port, async () => {
       console.log("Successfully loaded Database table: " + connection.entityMetadatas[0].schema);

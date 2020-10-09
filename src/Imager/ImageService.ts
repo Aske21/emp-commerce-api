@@ -1,17 +1,18 @@
+import crypto from "crypto";
 import multer from "multer";
 import fs from "fs";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./src/Imager/images/");
+    cb(null, "./src/Images/");
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now().toString() + "." + file.mimetype.split("/")[1]);
+    cb(null, crypto.randomBytes(20).toString("hex") + "." + file.mimetype.split("/")[1]);
   },
 });
 
 export class ImageService {
-  private static _baseImageRepo: string = "src/Imager/images/";
+  private static _baseImageRepo: string = "src/Images";
   private static _baseAuthUrl: string = process.env.BASE_AUTH_URL;
 
   public static GenerateImageURL = (name: string) => {
