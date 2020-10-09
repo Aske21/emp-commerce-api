@@ -4,7 +4,7 @@ import fs from "fs";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./src/Images/");
+    cb(null, "./Images/");
   },
   filename: (req, file, cb) => {
     cb(null, crypto.randomBytes(20).toString("hex") + "." + file.mimetype.split("/")[1]);
@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
 });
 
 export class ImageService {
-  private static _baseImageRepo: string = "src/Images";
+  private static _baseImageRepo: string = "./Images";
   private static _baseAuthUrl: string = process.env.BASE_AUTH_URL;
 
   public static GenerateImageURL = (name: string) => {
