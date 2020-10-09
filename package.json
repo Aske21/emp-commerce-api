@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@ionic/app-scripts": "^3.2.3",
+    "@nestjs/typeorm": "^7.1.4",
     "@sendgrid/mail": "^7.0.1",
     "@types/bluebird": "^3.5.30",
     "@types/cors": "^2.8.6",
@@ -30,7 +31,7 @@
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "multer": "^1.4.2",
-    "mysql": "^2.14.1",
+    "mysql": "^2.18.1",
     "mysql2": "^2.1.0",
     "nodemailer-sendgrid": "^1.0.3",
     "pg": "^8.0.3",
@@ -38,7 +39,7 @@
     "swagger-ui-express": "^4.1.4",
     "ts-node": "^8.9.0",
     "ts-node-dev": "^1.0.0-pre.44",
-    "typeorm": "0.2.24",
+    "typeorm": "^0.2.24",
     "typeorm-plus": "0.0.58",
     "typescript": "^3.8.3",
     "underscore": "^1.10.2"
