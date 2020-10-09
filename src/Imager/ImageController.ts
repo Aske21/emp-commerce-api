@@ -11,4 +11,12 @@ ImageController.post(
   }
 );
 
+ImageController.get(
+  "/",
+  ImageService.Upload.single("productImage"),
+  (req: Request, res: Response) => {
+    res.json(200);
+  }
+);
+
 export default ImageController;
