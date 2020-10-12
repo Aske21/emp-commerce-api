@@ -30,7 +30,7 @@ class CartServiceProvider implements ICartService {
     dto.customerId = currentCustomerId;
 
     dto.totalPrice = product.price * dto.quantity;
-    dto.archivedAt = null;
+    dto.archivedAt = new Date();
 
     await getConnection().createQueryBuilder().insert().into(Cart).values(dto).execute();
 
