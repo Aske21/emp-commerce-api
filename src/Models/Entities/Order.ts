@@ -1,9 +1,16 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Customer } from "./Customer";
 import { Product } from "./Product";
 
-@Index("order_product_id_fk", ["productId"], {})
 @Index("order_customer_id_fk", ["customerId"], {})
+@Index("order_product_id_fk", ["productId"], {})
 @Entity("order", { schema: "heroku_42df861642a2ede" })
 export class Order {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
@@ -21,18 +28,19 @@ export class Order {
   @Column("float", { name: "totalPrice", precision: 12 })
   totalPrice: number;
 
-  @Column("timestamp", { name: "createdAt", default: () => "CURRENT_TIMESTAMP", select: false })
+  @Column("timestamp", {
+    name: "createdAt",
+    default: () => "CURRENT_TIMESTAMP",
+  })
   createdAt: Date;
 
   @Column("timestamp", {
     name: "modifiedAt",
     default: () => "CURRENT_TIMESTAMP",
-    onUpdate: "CURRENT_TIMESTAMP",
-    select: false,
   })
   modifiedAt: Date;
 
-  @Column("datetime", { name: "archivedAt", nullable: true, select: false })
+  @Column("datetime", { name: "archivedAt", nullable: true })
   archivedAt: Date | null;
 
   @ManyToOne(() => Customer, (customer) => customer.orders, {

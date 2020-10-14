@@ -9,18 +9,19 @@ export class Category {
   @Column("varchar", { name: "categoryName", length: 50 })
   categoryName: string;
 
-  @Column("timestamp", { name: "createdAt", default: () => "CURRENT_TIMESTAMP", select: false })
+  @Column("timestamp", {
+    name: "createdAt",
+    default: () => "CURRENT_TIMESTAMP",
+  })
   createdAt: Date;
 
   @Column("timestamp", {
     name: "modifiedAt",
     default: () => "CURRENT_TIMESTAMP",
-    onUpdate: "CURRENT_TIMESTAMP",
-    select: false,
   })
   modifiedAt: Date;
 
-  @Column("date", { name: "archivedAt", nullable: true, select: false })
+  @Column("date", { name: "archivedAt", nullable: true })
   archivedAt: string | null;
 
   @OneToMany(() => Product, (product) => product.category)

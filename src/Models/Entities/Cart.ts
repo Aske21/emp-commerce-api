@@ -1,9 +1,16 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Customer } from "./Customer";
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Product } from "./Product";
+import { Customer } from "./Customer";
 
-@Index("cart_customer_id_fk", ["customerId"], {})
 @Index("cart_product_id_fk", ["productId"], {})
+@Index("cart_customer_id_fk", ["customerId"], {})
 @Entity("cart", { schema: "heroku_42df861642a2ede" })
 export class Cart {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
@@ -21,26 +28,20 @@ export class Cart {
   @Column("float", { name: "totalPrice", nullable: true, precision: 12 })
   totalPrice: number | null;
 
-  @Column("timestamp", { name: "createdAt", default: () => "CURRENT_TIMESTAMP", select: false })
+  @Column("timestamp", {
+    name: "createdAt",
+    default: () => "CURRENT_TIMESTAMP",
+  })
   createdAt: Date;
 
   @Column("timestamp", {
     name: "modifiedAt",
     default: () => "CURRENT_TIMESTAMP",
-    onUpdate: "CURRENT_TIMESTAMP",
-    select: false,
   })
   modifiedAt: Date;
 
-  @Column("datetime", { name: "archivedAt", select: false })
-  archivedAt: Date | null;
-
-  @ManyToOne(() => Customer, (customer) => customer.carts, {
-    onDelete: "RESTRICT",
-    onUpdate: "RESTRICT",
-  })
-  @JoinColumn([{ name: "customerId", referencedColumnName: "id" }])
-  customer: Customer;
+  @Column("datetime", { name: "archivedAt" })
+  archivedAt: Date;
 
   @ManyToOne(() => Product, (product) => product.carts, {
     onDelete: "RESTRICT",
@@ -48,4 +49,11 @@ export class Cart {
   })
   @JoinColumn([{ name: "productId", referencedColumnName: "id" }])
   product: Product;
+
+  @ManyToOne(() => Customer, (customer) => customer.carts, {
+    onDelete: "RESTRICT",
+    onUpdate: "RESTRICT",
+  })
+  @JoinColumn([{ name: "customerId", referencedColumnName: "id" }])
+  customer: Customer;
 }

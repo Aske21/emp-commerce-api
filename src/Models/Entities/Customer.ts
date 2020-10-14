@@ -28,22 +28,23 @@ export class Customer {
   @Column("varchar", { name: "password", length: 100 })
   password: string;
 
-  @Column("varchar", { name: "refreshToken", nullable: true, length: 300 })
-  refreshToken: string | null;
-
-  @Column("timestamp", { name: "createdAt", default: () => "CURRENT_TIMESTAMP", select: false })
+  @Column("timestamp", {
+    name: "createdAt",
+    default: () => "CURRENT_TIMESTAMP",
+  })
   createdAt: Date;
 
   @Column("timestamp", {
     name: "modifiedAt",
     default: () => "CURRENT_TIMESTAMP",
-    onUpdate: "CURRENT_TIMESTAMP",
-    select: false,
   })
   modifiedAt: Date;
 
-  @Column("varchar", { name: "archivedAt", nullable: true, length: 30, select: false })
+  @Column("varchar", { name: "archivedAt", nullable: true, length: 30 })
   archivedAt: string | null;
+
+  @Column("varchar", { name: "refreshToken", nullable: true, length: 300 })
+  refreshToken: string | null;
 
   @OneToMany(() => Cart, (cart) => cart.customer)
   carts: Cart[];

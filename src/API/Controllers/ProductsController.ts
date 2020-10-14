@@ -1,7 +1,6 @@
 import cors from "cors";
 import { Product } from "../../Models/Entities";
 import { classToPlain } from "class-transformer";
-import { ImageService } from "../../Imager/ImageService";
 import express, { Router, Request, Response } from "express";
 import { HandleAPIError } from "../../Common/Error/HandleAPIError";
 import { ProductDTO, ProductFilterDTO } from "./../../Services/Products/DTO";
@@ -69,37 +68,30 @@ ProductController.get("/:id", async (req: Request, res: Response) => {
 
 ProductController.post(
   "/",
-  ImageService.Upload.single("productImage"),
+
   async (req: Request, res: Response) => {
     try {
       res.status(201);
-
-      res.json(
-        await ProductsService.AddPrdouct(classToPlain(req.body) as ProductDTO, req.file.filename)
-      );
+      res.json(await ProductsService.AddPrdouct(req.body as ProductDTO));
     } catch (err) {
       HandleAPIError(err, res);
     }
   }
 );
 
-ProductController.put(
-  "/:id",
-  ImageService.Upload.single("productImage"),
-  async (req: Request, res: Response) => {
-    try {
-      res.json(
-        await ProductsService.UpdateProduct(
-          Number(req.params.id),
-          classToPlain(req.body) as ProductDTO,
-          req.file.filename
-        )
-      );
-    } catch (err) {
-      HandleAPIError(err, res);
-    }
+ProductController.put("/:id", async (req: Request, res: Response) => {
+  try {
+    res.json(
+      await ProductsService.UpdateProduct(
+        Number(req.params.id),
+        classToPlain(req.body) as ProductDTO,
+        req.file.filename
+      )
+    );
+  } catch (err) {
+    HandleAPIError(err, res);
   }
-);
+});
 
 ProductController.delete("/:id", async (req: Request, res: Response) => {
   try {

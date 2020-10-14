@@ -3,20 +3,22 @@ import { ProductDTO, ProductFilterDTO } from "./DTO";
 import { IPrdouctService } from "../Contracts";
 import { classToPlain } from "class-transformer";
 import { APIError } from "./../../Common/Error/APIError";
-import { Category, Product } from "../../Models/Entities";
+import { Category, Product, Productimage } from "../../Models/Entities";
 import { createQueryBuilder, getConnection, getRepository } from "typeorm";
 import responseMessages from "../../../responseMessages.config.json";
+import Axios from "axios";
 
 class ProductServiceProvider implements IPrdouctService {
   public GetAllProducts = async (dto: ProductFilterDTO): Promise<Product[]> => {
     let products = classToPlain(
       await createQueryBuilder(Product)
         .innerJoinAndSelect("Product.category", "Category")
+        .innerJoinAndSelect("Product.productimages", "Productimage")
         .where("Product.archivedAt IS NULL")
         .orderBy(`Product.${dto.sidx ?? "createdAt"}`, dto.sord ?? "ASC")
         .getMany()
     ) as Product[];
-
+    console.log(products);
     if (products.length === 0) return products;
 
     return ProductServiceProvider.FilterProducts(products, dto);
@@ -26,6 +28,7 @@ class ProductServiceProvider implements IPrdouctService {
     return classToPlain(
       await createQueryBuilder(Product)
         .innerJoinAndSelect("Product.category", "Category")
+        .innerJoinAndSelect("Product.productimages", "Productimage")
         .where("Product.archivedAt IS NOT NULL")
         .getMany()
     ) as Product[];
@@ -35,6 +38,7 @@ class ProductServiceProvider implements IPrdouctService {
     return classToPlain(
       await createQueryBuilder(Product)
         .innerJoinAndSelect("Product.category", "Category")
+        .innerJoinAndSelect("Product.productimages", "Productimage")
         .where("Product.isRecommended = true")
         .andWhere("Product.archivedAt IS NULL")
         .getMany()
@@ -45,6 +49,7 @@ class ProductServiceProvider implements IPrdouctService {
     return classToPlain(
       await createQueryBuilder(Product)
         .innerJoinAndSelect("Product.category", "Category")
+        .innerJoinAndSelect("Product.productimages", "Productimage")
         .where("Product.categoryId = :categoryId", { categoryId: categoryId })
         .andWhere("Product.archivedAt IS NULL")
         .orderBy("RAND()")
@@ -57,6 +62,7 @@ class ProductServiceProvider implements IPrdouctService {
     let product = classToPlain(
       await createQueryBuilder(Product)
         .innerJoinAndSelect("Product.category", "Category")
+        .innerJoinAndSelect("Product.productimages", "Productimage")
         .where("Product.id = :id", { id: productId })
         .andWhere("Product.archivedAt IS NULL")
         .getOne()
@@ -67,7 +73,7 @@ class ProductServiceProvider implements IPrdouctService {
     return product;
   };
 
-  public AddPrdouct = async (dto: ProductDTO, productImage: string): Promise<string> => {
+  public AddPrdouct = async (dto: ProductDTO): Promise<string> => {
     let category: Category = await createQueryBuilder(Category)
       .where("Category.id = :id", {
         id: dto.categoryId,
@@ -76,13 +82,13 @@ class ProductServiceProvider implements IPrdouctService {
 
     if (!category) throw APIError.EntityNotFound(responseMessages.product.add.nonExistingCategory);
 
-    dto.image = productImage;
-
     let product: Product = dto;
 
-    await getConnection().createQueryBuilder().insert().into(Product).values(product).execute();
+    let insertId = await (
+      await getConnection().createQueryBuilder().insert().into(Product).values(product).execute()
+    ).generatedMaps[0].id;
 
-    return responseMessages.product.add.success;
+    return responseMessages.product.add.success + "\0" + insertId;
   };
 
   public UpdateProduct = async (
@@ -107,8 +113,7 @@ class ProductServiceProvider implements IPrdouctService {
         })
         .getOne();
 
-      if (!category)
-        throw APIError.EntityNotFound(responseMessages.product.update.nonExistingCategory);
+      if (!category) throw APIError.EntityNotFound(responseMessages.product.update.nonExistingCategory);
     }
 
     let updatedProduct: Product = dto;
@@ -152,9 +157,7 @@ class ProductServiceProvider implements IPrdouctService {
       );
 
     if (dto.categoryId !== null)
-      filteredProducts = filteredProducts.filter(
-        (product) => product.category.id === dto.categoryId
-      );
+      filteredProducts = filteredProducts.filter((product) => product.category.id === dto.categoryId);
 
     if (dto.price.length === 2)
       filteredProducts = filteredProducts.filter(
